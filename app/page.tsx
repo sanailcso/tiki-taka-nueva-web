@@ -104,7 +104,7 @@ export default function Home() {
         <div className="section-shell play-layout">
           <div className="play-copy" data-reveal>
             <div className="section-kicker play-kicker"><span>03</span><i /> El universo online</div>
-            <img className="play-logo" src="/tikitaka-play-logo.png" alt="Tiki Taka Play" />
+            <img className="play-logo" src="tikitaka-play-logo.png" alt="Tiki Taka Play" />
             <h2>La experiencia <BrandName suffix="," /> también online.</h2>
             <p>
               La extensión online de Tiki Taka reúne slots, casino en vivo y juegos

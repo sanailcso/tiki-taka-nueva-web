@@ -9,7 +9,7 @@ const COOKIE_NAME = "tt_admin_session";
 const SESSION_DURATION_MS = 12 * 60 * 60 * 1000;
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
 const MAX_LOGIN_FAILURES = 5;
-const PBKDF2_ITERATIONS = 210_000;
+const PBKDF2_ITERATIONS = 100_000;
 
 type CredentialRow = {
   username: string;

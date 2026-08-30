@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
+import { getPublishedSiteContent } from "./cms/content-store";
 
-export const metadata: Metadata = {
-  title: "Tiki Taka Games · Nueva web",
-  description:
-    "Propuesta de nueva web corporativa para Grupo Tiki Taka Games, más de 50 años creando experiencias de ocio.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getPublishedSiteContent();
+  return { title: content.seo.title, description: content.seo.description };
+}
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

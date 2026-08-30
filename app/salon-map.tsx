@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { LayerGroup, Map as LeafletMap, Marker as LeafletMarker } from "leaflet";
 
-type Region = "Murcia" | "Comunidad Valenciana" | "Castilla-La Mancha" | "Andalucía";
-type Salon = { name: string; region: Region; href: string; lat: number; lng: number };
+export type Region = "Murcia" | "Comunidad Valenciana" | "Castilla-La Mancha" | "Andalucía";
+export type Salon = { name: string; region: Region; href: string; lat: number; lng: number };
 
 const salonData: Array<Omit<Salon, "lat" | "lng">> = [
   { name: "Alcantarilla", region: "Murcia", href: "https://maps.app.goo.gl/Naw5XAA4HSngbfJeA" },
@@ -96,13 +96,13 @@ const coordinates: Record<string, [number, number]> = {
   "Las Candelas": [36.84, -2.46], "Vintage": [36.845, -2.45], "Almanzora": [37.35, -2.19], "Huércal-Overa": [37.39, -1.94],
 };
 
-const salons: Salon[] = salonData.map((salon) => ({ ...salon, lat: coordinates[salon.name][0], lng: coordinates[salon.name][1] }));
+export const DEFAULT_SALONS: Salon[] = salonData.map((salon) => ({ ...salon, lat: coordinates[salon.name][0], lng: coordinates[salon.name][1] }));
 const regions: Array<{ value: Region | "Todos"; label: string }> = [
   { value: "Todos", label: "Todos" }, { value: "Murcia", label: "Murcia" }, { value: "Comunidad Valenciana", label: "C. Valenciana" },
   { value: "Castilla-La Mancha", label: "Castilla-La Mancha" }, { value: "Andalucía", label: "Andalucía" },
 ];
 
-export function SalonMap() {
+export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
   const mapNodeRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markerLayerRef = useRef<LayerGroup | null>(null);
@@ -118,7 +118,7 @@ export function SalonMap() {
   const filtered = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase("es");
     return salons.filter((salon) => (region === "Todos" || salon.region === region) && (!needle || `${salon.name} ${salon.region}`.toLocaleLowerCase("es").includes(needle)));
-  }, [query, region]);
+  }, [query, region, salons]);
   const displayedActive = active && filtered.find((salon) => salon.name === active.name);
 
   useEffect(() => {

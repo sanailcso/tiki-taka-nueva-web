@@ -40,6 +40,9 @@ function mergeDefaults<T>(base: T, value: unknown): T {
 
 export function normalizeSiteContent(value: unknown): SiteContent {
   const merged = mergeDefaults(cloneDefaults(), value);
+  if (merged.intro.title === "Mucho más que una empresa de juego.") {
+    merged.intro.title = "Una forma diferente de entender el ocio.";
+  }
   merged.hero.slides = merged.hero.slides.slice(0, 12).filter((slide) => slide && slide.id && slide.src);
   if (!merged.hero.slides.length) {
     merged.hero.slides = structuredClone(DEFAULT_SITE_CONTENT.hero.slides);

@@ -26,7 +26,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   proof: { values: [{ value: "+50", label: "años de experiencia" }, { value: "+60", label: "salones de juego" }, { value: "2", label: "mundos conectados" }], note: "Tradición que impulsa el futuro." },
   intro: {
     kicker: "El grupo",
-    title: "Mucho más que una empresa de juego.",
+    title: "Una forma diferente de entender el ocio.",
     paragraphs: [
       "Tiki Taka Games nació como una empresa familiar y hoy es un grupo empresarial que integra experiencia, tecnología y servicio en distintas áreas del sector del ocio.",
       "Crecemos manteniendo la cercanía que nos define: conocemos cada mercado, cuidamos cada espacio y evolucionamos junto a las personas.",

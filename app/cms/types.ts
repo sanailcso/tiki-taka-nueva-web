@@ -48,7 +48,7 @@ export type SiteContent = {
     kicker: string;
     title: string;
     description: string;
-    cards: Array<{ eyebrow: string; title: string; description: string; label?: string; href?: string }>;
+    cards: Array<{ eyebrow: string; title: string; description: string; label?: string; href?: string; logoUrl?: string }>;
   };
   finder: { kicker: string; title: string; description: string; count: string; countLabel: string; directoryLabel: string; directoryUrl: string };
   history: { kicker: string; title: string; description: string; entries: Array<{ date: string; title: string; description: string; active?: boolean }> };

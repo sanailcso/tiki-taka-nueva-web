@@ -131,12 +131,13 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
           </div>
           <div className="business-grid" data-reveal>
             {content.areas.cards.map((card, index) => (
-              <article key={card.title} className={`business-card card-reveal stack-${["one", "two", "three"][index] || "three"} ${index === 0 ? "featured" : ""}`}>
+              <article key={card.title} className={`business-card card-reveal stack-${["one", "two", "three", "four"][index] || "four"} ${index === 0 ? "featured" : ""} ${card.logoUrl ? "cafetiko-card" : ""}`}>
                 <span className="card-number">{String(index + 1).padStart(2, "0")}</span>
                 {index === 0 && <div className="card-orbit" aria-hidden="true"><i /><i /><i /></div>}
-                <div className="card-signal" aria-hidden="true">
+                {card.logoUrl && <img className="card-brand-logo" src={card.logoUrl} alt={`${card.title}, área de negocio de Tiki Taka Games`} />}
+                {!card.logoUrl && <div className="card-signal" aria-hidden="true">
                   <strong>{String(index + 1).padStart(2, "0")}</strong><span /><span /><span />
-                </div>
+                </div>}
                 <div className="card-body">
                   <p>{card.eyebrow}</p><h3>{card.title}</h3><span>{card.description}</span>
                   {card.href && card.label && <a href={card.href} target={card.href.startsWith("http") ? "_blank" : undefined} rel={card.href.startsWith("http") ? "noreferrer" : undefined}>{card.label} <b>↗</b></a>}
@@ -222,7 +223,7 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
             <p>{content.footer.tagline}</p>
           </div>
           <div><h3>El grupo</h3><a href="#grupo">Quiénes somos</a><a href="#historia">Nuestra historia</a><a href="#empleo">Empleo</a></div>
-          <div><h3>Áreas</h3><a href="#areas">Salones de juego</a><a href="https://tikitakamaquinasrecreativas.com/" target="_blank" rel="noreferrer">Terminales de hostelería</a><a href="#areas">Apuestas deportivas</a><a href={playUrl}><BrandName name={content.identity.brandName} play /></a></div>
+          <div><h3>Áreas</h3><a href="#areas">Salones de juego</a><a href="https://tikitakamaquinasrecreativas.com/" target="_blank" rel="noreferrer">Terminales de hostelería</a><a href="#areas">Apuestas deportivas</a><a href="#areas">Cafetiko</a><a href={playUrl}><BrandName name={content.identity.brandName} play /></a></div>
           <div><h3>Contacto</h3><a href={`mailto:${content.footer.email}`}>{content.footer.email}</a><a href={`tel:${content.footer.phone.replace(/\s/g, "")}`}>{content.footer.phone}</a><p>{content.footer.address.split("\n").map((line) => <span key={line}>{line}<br /></span>)}</p></div>
         </div>
         <div className="footer-bottom"><span>© 2026 <BrandName name={content.identity.brandName} /> Games</span><div><a href={content.footer.legalUrl} target="_blank" rel="noreferrer">Aviso legal</a><a href={content.footer.privacyUrl} target="_blank" rel="noreferrer">Privacidad</a><a href={content.footer.cookiesUrl} target="_blank" rel="noreferrer">Cookies</a><a href={content.footer.ethicsUrl} target="_blank" rel="noreferrer">Canal ético</a></div><strong>JUEGA CON RESPONSABILIDAD · +18</strong></div>

@@ -25,6 +25,13 @@ export function normalizeSiteContent(value: unknown): SiteContent {
   if (merged.intro.title === "Mucho más que una empresa de juego.") {
     merged.intro.title = "Una forma diferente de entender el ocio.";
   }
+  const cafetiko = DEFAULT_SITE_CONTENT.areas.cards.find((card) => card.title === "Cafetiko");
+  if (cafetiko && !merged.areas.cards.some((card) => card.title.trim().toLocaleLowerCase("es") === "cafetiko")) {
+    merged.areas.cards.push(structuredClone(cafetiko));
+  }
+  if (merged.areas.description === "Espacios de ocio, apuestas deportivas y soluciones para establecimientos, con una atención cercana y una identidad reconocible.") {
+    merged.areas.description = DEFAULT_SITE_CONTENT.areas.description;
+  }
   merged.hero.slides = merged.hero.slides.slice(0, 12).filter((slide) => slide && slide.id && slide.src);
   if (!merged.hero.slides.length) merged.hero.slides = structuredClone(DEFAULT_SITE_CONTENT.hero.slides);
   merged.salons = merged.salons.slice(0, 250);

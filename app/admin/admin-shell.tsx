@@ -21,27 +21,21 @@ import {
   SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { DEFAULT_SALONS } from "../salon-map";
+import {
+  addCmsMediaUrl, logoutCms, publishCmsDraft, restoreCmsRevision, saveCmsDraft,
+  updateCmsCredentials, uploadCmsMedia,
+} from "../cms/supabase-cms";
 import type { ContentRevision, MediaAsset, SiteContent } from "../cms/types";
 
 type Initial = { content: SiteContent; version: number; updatedAt: number; publishedAt: number };
 type Section = "overview" | "identity" | "hero" | "intro" | "play" | "areas" | "finder" | "history" | "commitment" | "jobs" | "footer" | "seo" | "motion" | "media" | "security" | "revisions";
-const SAFE_UPLOAD_BYTES = 650 * 1024;
+const IMAGE_OPTIMIZE_THRESHOLD = 5 * 1024 * 1024;
+const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
 const OPTIMIZABLE_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const MediaLibraryContext = createContext<MediaAsset[]>([]);
 
-async function responsePayload(response: Response) {
-  const text = await response.text();
-  try { return JSON.parse(text); }
-  catch {
-    if (response.status === 413 || text.toLowerCase().includes("payload too large")) {
-      return { error: "El archivo continúa siendo demasiado grande. Prueba a reducirlo o añádelo mediante una URL." };
-    }
-    return { error: text || "El servidor no ha podido procesar el archivo." };
-  }
-}
-
 async function optimizeImageForUpload(file: File): Promise<File> {
-  if (file.size <= SAFE_UPLOAD_BYTES || !OPTIMIZABLE_IMAGE_TYPES.has(file.type)) return file;
+  if (file.size <= IMAGE_OPTIMIZE_THRESHOLD || !OPTIMIZABLE_IMAGE_TYPES.has(file.type)) return file;
   const objectUrl = URL.createObjectURL(file);
   try {
     const image = await new Promise<HTMLImageElement>((resolve, reject) => {
@@ -68,7 +62,7 @@ async function optimizeImageForUpload(file: File): Promise<File> {
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", plan.quality));
       if (!blob) continue;
       if (!chosen || blob.size < chosen.size) chosen = blob;
-      if (blob.size <= SAFE_UPLOAD_BYTES) { chosen = blob; break; }
+      if (blob.size <= IMAGE_OPTIMIZE_THRESHOLD) { chosen = blob; break; }
     }
     if (!chosen) throw new Error("El navegador no ha podido optimizar la imagen.");
     const name = file.name.replace(/\.[^.]+$/, "") + ".webp";
@@ -177,9 +171,7 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
   const save = async () => {
     setBusy("save");
     try {
-      const response = await fetch("/api/admin/content", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ content }) });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
+      const result = await saveCmsDraft(content);
       setUpdatedAt(result.updatedAt); setDirty(false); toast.success("Borrador guardado");
     } catch (error) { toast.error(error instanceof Error ? error.message : "No se pudo guardar"); }
     finally { setBusy(null); }
@@ -188,16 +180,10 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
   const publish = async () => {
     setBusy("publish");
     try {
-      if (dirty) {
-        const saveResponse = await fetch("/api/admin/content", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ content }) });
-        if (!saveResponse.ok) throw new Error((await saveResponse.json()).error);
-      }
-      const response = await fetch("/api/admin/publish", { method: "POST" });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
+      if (dirty) await saveCmsDraft(content);
+      const result = await publishCmsDraft();
       setVersion(result.version); setPublishedAt(result.publishedAt); setUpdatedAt(result.publishedAt); setDirty(false);
-      const revisionResponse = await fetch("/api/admin/revisions");
-      if (revisionResponse.ok) setRevisions((await revisionResponse.json()).revisions);
+      setRevisions(result.revisions);
       toast.success(`Versión ${result.version} publicada`);
     } catch (error) { toast.error(error instanceof Error ? error.message : "No se pudo publicar"); }
     finally { setBusy(null); }
@@ -209,13 +195,9 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
     setBusy("upload");
     try {
       const file = await optimizeImageForUpload(selectedFile);
-      if (file.size > SAFE_UPLOAD_BYTES) {
-        throw new Error(file.type.startsWith("video/") ? "Este vídeo es demasiado grande para subirlo directamente. Añádelo mediante una URL." : "Este archivo es demasiado grande. Redúcelo o añádelo mediante una URL.");
-      }
-      const form = new FormData(); form.set("file", file);
-      const response = await fetch("/api/admin/media", { method: "POST", body: form });
-      const result = await responsePayload(response); if (!response.ok) throw new Error(result.error);
-      setAssets((current) => [result.asset, ...current]); if (fileRef.current) fileRef.current.value = "";
+      if (file.size > MAX_UPLOAD_BYTES) throw new Error("El archivo supera el límite de 50 MB.");
+      const asset = await uploadCmsMedia(file);
+      setAssets((current) => [asset, ...current]); if (fileRef.current) fileRef.current.value = "";
       const optimized = file.size < selectedFile.size;
       toast.success(optimized ? `Imagen optimizada y subida (${(file.size / 1024 / 1024).toFixed(1)} MB)` : "Archivo añadido a la biblioteca");
     } catch (error) { toast.error(error instanceof Error ? error.message : "No se pudo subir"); }
@@ -226,10 +208,8 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
     if (!mediaUrl.trim()) return toast.error("Pega una URL de imagen o vídeo");
     setBusy("url");
     try {
-      const form = new FormData(); form.set("url", mediaUrl.trim()); form.set("kind", mediaKind);
-      const response = await fetch("/api/admin/media", { method: "POST", body: form });
-      const result = await responsePayload(response); if (!response.ok) throw new Error(result.error);
-      setAssets((current) => [result.asset, ...current]); setMediaUrl("");
+      const asset = await addCmsMediaUrl(mediaUrl.trim(), mediaKind);
+      setAssets((current) => [asset, ...current]); setMediaUrl("");
       toast.success("URL añadida a la biblioteca");
     } catch (error) { toast.error(error instanceof Error ? error.message : "No se pudo añadir la URL"); }
     finally { setBusy(null); }
@@ -238,8 +218,7 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
   const restore = async (id: string) => {
     setBusy("restore");
     try {
-      const response = await fetch(`/api/admin/revisions/${id}/restore`, { method: "POST" });
-      const result = await response.json(); if (!response.ok) throw new Error(result.error);
+      const result = await restoreCmsRevision(id);
       setContent({ ...result.content, salons: result.content.salons.length ? result.content.salons : DEFAULT_SALONS }); setUpdatedAt(result.updatedAt); setDirty(true);
       toast.success("Versión recuperada como borrador"); setSection("overview");
     } catch (error) { toast.error(error instanceof Error ? error.message : "No se pudo recuperar"); }
@@ -248,8 +227,8 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
 
   const logout = async () => {
     setBusy("logout");
-    try { await fetch("/api/admin/auth/logout", { method: "POST" }); }
-    finally { window.location.assign("/admin/login"); }
+    try { await logoutCms(); }
+    finally { window.location.assign(adminUrl("login")); }
   };
 
   const updateCredentials = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -257,15 +236,9 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
     if (security.newPassword !== security.confirmPassword) return toast.error("Las nuevas contraseñas no coinciden");
     setBusy("credentials");
     try {
-      const response = await fetch("/api/admin/auth/credentials", {
-        method: "PUT",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(security),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "No se han podido actualizar las credenciales.");
+      await updateCmsCredentials(security);
       toast.success("Credenciales actualizadas. Inicia sesión de nuevo.");
-      window.setTimeout(() => window.location.assign("/admin/login"), 700);
+      window.setTimeout(() => window.location.assign(adminUrl("login")), 700);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "No se han podido actualizar las credenciales.");
       setBusy(null);
@@ -273,6 +246,14 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
   };
 
   const filteredSalons = useMemo(() => content.salons.map((salon, index) => ({ salon, index })).filter(({ salon }) => `${salon.name} ${salon.region}`.toLowerCase().includes(salonQuery.toLowerCase())), [content.salons, salonQuery]);
+
+  function adminUrl(suffix = "") {
+    if (typeof window === "undefined") return `/admin${suffix ? `/${suffix}` : ""}`;
+    const marker = "/admin";
+    const index = window.location.pathname.lastIndexOf(marker);
+    const root = index >= 0 ? window.location.pathname.slice(0, index + marker.length) : marker;
+    return `${root}${suffix ? `/${suffix}` : ""}`;
+  }
 
   return <MediaLibraryContext.Provider value={assets}><SidebarProvider className="cms-root">
     <Sidebar variant="sidebar" collapsible="offcanvas" className="cms-sidebar">
@@ -283,7 +264,7 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
       <SidebarFooter className="cms-sidebar-footer"><div><span className="cms-avatar">{userName.slice(0, 1).toUpperCase()}</span><div><strong>{userName}</strong><small>Administrador</small></div></div><button type="button" onClick={logout} disabled={busy === "logout"} aria-label="Cerrar sesión">{busy === "logout" ? <Loader2 className="animate-spin" /> : <LogOut />}</button></SidebarFooter>
     </Sidebar>
     <SidebarInset className="cms-inset">
-      <header className="cms-topbar"><div><SidebarTrigger><Menu /></SidebarTrigger><span className={`cms-status ${dirty ? "draft" : "saved"}`}><i />{dirty ? "Cambios sin guardar" : `Borrador guardado${version ? ` · v${version}` : ""}`}</span></div><div className="cms-actions"><Button variant="outline" asChild><a href="/admin/preview" target="_blank">Vista previa <ExternalLink /></a></Button><Button variant="outline" onClick={save} disabled={Boolean(busy)}>{busy === "save" ? <Loader2 className="animate-spin" /> : <Save />}Guardar</Button><Button className="cms-publish" onClick={publish} disabled={Boolean(busy)}>{busy === "publish" ? <Loader2 className="animate-spin" /> : <Globe2 />}Publicar</Button></div></header>
+      <header className="cms-topbar"><div><SidebarTrigger><Menu /></SidebarTrigger><span className={`cms-status ${dirty ? "draft" : "saved"}`}><i />{dirty ? "Cambios sin guardar" : `Borrador guardado${version ? ` · v${version}` : ""}`}</span></div><div className="cms-actions"><Button variant="outline" asChild><a href={adminUrl("preview")} target="_blank">Vista previa <ExternalLink /></a></Button><Button variant="outline" onClick={save} disabled={Boolean(busy)}>{busy === "save" ? <Loader2 className="animate-spin" /> : <Save />}Guardar</Button><Button className="cms-publish" onClick={publish} disabled={Boolean(busy)}>{busy === "publish" ? <Loader2 className="animate-spin" /> : <Globe2 />}Publicar</Button></div></header>
       <main className="cms-main">{renderSection()}</main>
     </SidebarInset><Toaster position="top-right" richColors />
   </SidebarProvider></MediaLibraryContext.Provider>;
@@ -320,14 +301,14 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
       <form className="cms-security" onSubmit={updateCredentials}>
         <div className="cms-security-intro">
           <span><ShieldCheck /></span>
-          <div><h2>Credenciales del administrador</h2><p>La contraseña se guarda cifrada mediante un hash con sal. Al confirmar el cambio se cerrarán todas las sesiones abiertas.</p></div>
+          <div><h2>Credenciales del administrador</h2><p>El acceso está protegido por Supabase Auth. Al confirmar el cambio se cerrará esta sesión para que vuelvas a identificarte.</p></div>
         </div>
         <div className="cms-card cms-grid-2">
           <Field label="Nuevo usuario" value={security.username} onChange={(username) => setSecurity((current) => ({ ...current, username }))} hint="Entre 3 y 32 caracteres: letras, números, punto, guion o guion bajo." />
           <Field label="Contraseña actual" type="password" value={security.currentPassword} onChange={(currentPassword) => setSecurity((current) => ({ ...current, currentPassword }))} hint="Necesaria para autorizar cualquier cambio." />
           <Field label="Nueva contraseña" type="password" value={security.newPassword} onChange={(newPassword) => setSecurity((current) => ({ ...current, newPassword }))} hint="Déjala vacía si solo quieres cambiar el usuario. Mínimo 8 caracteres." />
           <Field label="Repetir nueva contraseña" type="password" value={security.confirmPassword} onChange={(confirmPassword) => setSecurity((current) => ({ ...current, confirmPassword }))} />
-          <div className="cms-security-action"><div><KeyRound /><span><strong>Cambio protegido</strong><small>Las sesiones actuales se invalidarán automáticamente.</small></span></div><Button type="submit" disabled={busy === "credentials"}>{busy === "credentials" ? <Loader2 className="animate-spin" /> : <ShieldCheck />}Actualizar acceso</Button></div>
+          <div className="cms-security-action"><div><KeyRound /><span><strong>Cambio protegido</strong><small>Después del cambio tendrás que iniciar sesión de nuevo.</small></span></div><Button type="submit" disabled={busy === "credentials"}>{busy === "credentials" ? <Loader2 className="animate-spin" /> : <ShieldCheck />}Actualizar acceso</Button></div>
         </div>
       </form>
     </>;
@@ -336,7 +317,7 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
       <SectionHead eyebrow="Biblioteca" title="Imágenes y vídeos" description="Sube un archivo o añade una URL y reutiliza su ruta en la portada, Tiki Taka Play o cualquier otra sección." />
       <div className="cms-media-sources">
         <div className="cms-upload">
-          <div><Upload /><span><strong>Subir desde el dispositivo</strong><small>Las imágenes grandes se optimizan automáticamente · para vídeos utiliza una URL</small></span></div>
+          <div><Upload /><span><strong>Subir desde el dispositivo</strong><small>Imágenes y vídeos hasta 50 MB · las imágenes grandes se optimizan automáticamente</small></span></div>
           <Input ref={fileRef} type="file" accept="image/*,video/mp4,video/webm" />
           <Button onClick={upload} disabled={busy === "upload"}>{busy === "upload" ? <Loader2 className="animate-spin" /> : <Upload />}Subir archivo</Button>
         </div>

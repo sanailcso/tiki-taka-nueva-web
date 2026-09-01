@@ -1,4 +1,3 @@
-import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { getAdminForApi } from "../../../cms/admin-auth";
 import { listMedia, saveMediaMetadata } from "../../../cms/content-store";
@@ -44,6 +43,7 @@ export async function POST(request: Request) {
     const id = crypto.randomUUID();
     const extension = file.name.includes(".") ? file.name.split(".").pop()?.replace(/[^a-z0-9]/gi, "").toLowerCase() : "bin";
     const storageKey = `${new Date().toISOString().slice(0, 10)}/${id}.${extension || "bin"}`;
+    const { env } = await import("cloudflare:workers");
     await env.BUCKET.put(storageKey, await file.arrayBuffer(), { httpMetadata: { contentType: file.type } });
     const asset = { id, storageKey, filename: file.name.slice(0, 240), mimeType: file.type, size: file.size, altText, createdAt: Date.now(), createdBy: auth.user.email };
     try {

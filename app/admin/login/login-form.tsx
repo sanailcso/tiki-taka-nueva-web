@@ -4,6 +4,14 @@ import { useState } from "react";
 import { Eye, EyeOff, Loader2, LockKeyhole, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { loginCms } from "../../cms/supabase-cms";
+
+function resolveAdminPath(returnTo: string) {
+  const marker = "/admin";
+  const index = window.location.pathname.lastIndexOf(marker);
+  const base = index >= 0 ? window.location.pathname.slice(0, index) : "";
+  return returnTo.startsWith(marker) ? `${base}${returnTo}` : `${base}${marker}`;
+}
 
 export function LoginForm({ returnTo }: { returnTo: string }) {
   const [username, setUsername] = useState("");
@@ -17,14 +25,8 @@ export function LoginForm({ returnTo }: { returnTo: string }) {
     setBusy(true);
     setError("");
     try {
-      const response = await fetch("/api/admin/auth/login", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ username, password, returnTo }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "No se ha podido iniciar sesión.");
-      window.location.assign(result.returnTo || "/admin");
+      await loginCms(username, password);
+      window.location.assign(resolveAdminPath(returnTo));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "No se ha podido iniciar sesión.");
       setBusy(false);
@@ -46,7 +48,7 @@ export function LoginForm({ returnTo }: { returnTo: string }) {
         {error && <p className="cms-login-error" role="alert">{error}</p>}
         <Button type="submit" disabled={busy}>{busy ? <Loader2 className="animate-spin" /> : <LockKeyhole />}{busy ? "Comprobando…" : "Entrar al backoffice"}</Button>
       </form>
-      <small className="cms-login-note">La sesión se cierra automáticamente tras 12 horas. Los intentos repetidos se bloquean temporalmente.</small>
+      <small className="cms-login-note">Acceso protegido por Supabase Auth. Los intentos repetidos se limitan automáticamente.</small>
     </section>
   </main>;
 }

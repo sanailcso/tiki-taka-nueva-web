@@ -1,6 +1,5 @@
-import { env } from "cloudflare:workers";
-
 export async function GET(_request: Request, context: { params: Promise<{ key: string[] }> }) {
+  const { env } = await import("cloudflare:workers");
   const { key } = await context.params;
   const object = await env.BUCKET.get(key.join("/"));
   if (!object) return new Response("Archivo no encontrado", { status: 404 });

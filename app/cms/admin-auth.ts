@@ -1,6 +1,5 @@
 import "server-only";
 
-import { env } from "cloudflare:workers";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -28,7 +27,8 @@ export type AdminUser = {
   email: string;
 };
 
-function database() {
+async function database() {
+  const { env } = await import("cloudflare:workers");
   if (!env.DB) throw new Error("El almacenamiento del backoffice no está disponible.");
   return env.DB;
 }
@@ -85,10 +85,11 @@ function randomHex(length = 32) {
 }
 
 async function readCredentials(): Promise<CredentialRow> {
-  const row = await database().prepare(
+  const row = await (await database()).prepare(
     "SELECT username, password_hash, password_salt FROM admin_credentials WHERE id = ?",
   ).bind(CREDENTIAL_ID).first<CredentialRow>();
   if (row) return row;
+  const { env } = await import("cloudflare:workers");
   const initial = env as unknown as {
     CMS_INITIAL_USERNAME?: string;
     CMS_INITIAL_PASSWORD_HASH?: string;
@@ -115,11 +116,11 @@ export async function getAdminSession(): Promise<AdminUser | null> {
   const token = await currentSessionToken();
   if (!token) return null;
   const id = await digest(token);
-  const row = await database().prepare(
+  const row = await (await database()).prepare(
     "SELECT username, expires_at FROM admin_sessions WHERE id = ?",
   ).bind(id).first<SessionRow>();
   if (!row || row.expires_at <= Date.now()) {
-    if (row) await database().prepare("DELETE FROM admin_sessions WHERE id = ?").bind(id).run();
+    if (row) await (await database()).prepare("DELETE FROM admin_sessions WHERE id = ?").bind(id).run();
     return null;
   }
   const credential = await readCredentials();
@@ -145,7 +146,7 @@ export async function getAdminForApi() {
 
 export async function assertLoginAllowed(identifier: string) {
   const id = await digest(identifier || "unknown");
-  const row = await database().prepare(
+  const row = await (await database()).prepare(
     "SELECT failures, window_started_at, blocked_until FROM admin_login_attempts WHERE id = ?",
   ).bind(id).first<{ failures: number; window_started_at: number; blocked_until: number }>();
   if (row?.blocked_until && row.blocked_until > Date.now()) {
@@ -156,14 +157,14 @@ export async function assertLoginAllowed(identifier: string) {
 
 async function recordLoginFailure(id: string) {
   const now = Date.now();
-  const row = await database().prepare(
+  const row = await (await database()).prepare(
     "SELECT failures, window_started_at FROM admin_login_attempts WHERE id = ?",
   ).bind(id).first<{ failures: number; window_started_at: number }>();
   const activeWindow = Boolean(row && now - row.window_started_at < LOGIN_WINDOW_MS);
   const failures = activeWindow ? row!.failures + 1 : 1;
   const windowStartedAt = activeWindow ? row!.window_started_at : now;
   const blockedUntil = failures >= MAX_LOGIN_FAILURES ? now + LOGIN_WINDOW_MS : 0;
-  await database().prepare(`
+  await (await database()).prepare(`
     INSERT INTO admin_login_attempts (id, failures, window_started_at, blocked_until)
     VALUES (?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET failures = excluded.failures,
@@ -184,10 +185,11 @@ export async function loginAdmin(username: string, password: string, identifier:
   const expiresAt = now + SESSION_DURATION_MS;
   const token = randomHex(32);
   const sessionId = await digest(token);
-  await database().batch([
-    database().prepare("DELETE FROM admin_login_attempts WHERE id = ?").bind(attemptId),
-    database().prepare("DELETE FROM admin_sessions WHERE expires_at <= ?").bind(now),
-    database().prepare(
+  const db = await database();
+  await db.batch([
+    db.prepare("DELETE FROM admin_login_attempts WHERE id = ?").bind(attemptId),
+    db.prepare("DELETE FROM admin_sessions WHERE expires_at <= ?").bind(now),
+    db.prepare(
       "INSERT INTO admin_sessions (id, username, created_at, expires_at) VALUES (?, ?, ?, ?)",
     ).bind(sessionId, credential.username, now, expiresAt),
   ]);
@@ -203,7 +205,7 @@ export async function loginAdmin(username: string, password: string, identifier:
 
 export async function logoutAdmin() {
   const token = await currentSessionToken();
-  if (token) await database().prepare("DELETE FROM admin_sessions WHERE id = ?").bind(await digest(token)).run();
+  if (token) await (await database()).prepare("DELETE FROM admin_sessions WHERE id = ?").bind(await digest(token)).run();
   (await cookies()).set(COOKIE_NAME, "", {
     httpOnly: true,
     sameSite: "strict",
@@ -230,14 +232,15 @@ export async function updateAdminCredentials(input: { currentPassword: string; u
   const salt = password ? randomHex(24) : credential.password_salt;
   const passwordHash = password ? await hashPassword(password, salt) : credential.password_hash;
   const now = Date.now();
-  await database().batch([
-    database().prepare(`
+  const db = await database();
+  await db.batch([
+    db.prepare(`
       INSERT INTO admin_credentials (id, username, password_hash, password_salt, updated_at)
       VALUES (?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET username = excluded.username, password_hash = excluded.password_hash,
         password_salt = excluded.password_salt, updated_at = excluded.updated_at
     `).bind(CREDENTIAL_ID, username, passwordHash, salt, now),
-    database().prepare("DELETE FROM admin_sessions"),
+    db.prepare("DELETE FROM admin_sessions"),
   ]);
   (await cookies()).set(COOKIE_NAME, "", {
     httpOnly: true,

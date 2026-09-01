@@ -1,6 +1,7 @@
 import "server-only";
-import { env } from "cloudflare:workers";
 import { DEFAULT_SITE_CONTENT } from "./default-content";
+import { normalizeSiteContent } from "./content-normalize";
+import { CMS_CONTENT_ID, SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "./supabase-config";
 import type { ContentRevision, MediaAsset, SiteContent } from "./types";
 
 const ROW_ID = "main";
@@ -14,44 +15,14 @@ type ContentRow = {
   version: number;
 };
 
-function binding() {
+async function binding() {
+  const { env } = await import("cloudflare:workers");
   if (!env.DB) throw new Error("El almacenamiento del backoffice no está disponible.");
   return env.DB;
 }
 
 function cloneDefaults(): SiteContent {
   return structuredClone(DEFAULT_SITE_CONTENT);
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
-}
-
-function mergeDefaults<T>(base: T, value: unknown): T {
-  if (Array.isArray(base)) return (Array.isArray(value) ? value : base) as T;
-  if (isRecord(base)) {
-    const incoming = isRecord(value) ? value : {};
-    return Object.fromEntries(
-      Object.entries(base).map(([key, fallback]) => [key, mergeDefaults(fallback, incoming[key])]),
-    ) as T;
-  }
-  return (typeof value === typeof base ? value : base) as T;
-}
-
-export function normalizeSiteContent(value: unknown): SiteContent {
-  const merged = mergeDefaults(cloneDefaults(), value);
-  if (merged.intro.title === "Mucho más que una empresa de juego.") {
-    merged.intro.title = "Una forma diferente de entender el ocio.";
-  }
-  merged.hero.slides = merged.hero.slides.slice(0, 12).filter((slide) => slide && slide.id && slide.src);
-  if (!merged.hero.slides.length) {
-    merged.hero.slides = structuredClone(DEFAULT_SITE_CONTENT.hero.slides);
-  }
-  merged.salons = merged.salons.slice(0, 250);
-  merged.motion.heroCycleSeconds = Math.min(30, Math.max(3, Number(merged.motion.heroCycleSeconds) || 6));
-  merged.motion.machinesPlaybackRate = Math.min(1.5, Math.max(0.1, Number(merged.motion.machinesPlaybackRate) || 0.5));
-  merged.motion.playSceneHeight = Math.min(500, Math.max(140, Number(merged.motion.playSceneHeight) || 190));
-  return merged;
 }
 
 function parseContent(value: string | null | undefined): SiteContent {
@@ -64,12 +35,27 @@ function parseContent(value: string | null | undefined): SiteContent {
 }
 
 async function readRow(): Promise<ContentRow | null> {
-  return binding().prepare(
+  return (await binding()).prepare(
     "SELECT draft_json, published_json, draft_updated_at, published_at, updated_by, version FROM site_content WHERE id = ?",
   ).bind(ROW_ID).first<ContentRow>();
 }
 
 export async function getPublishedSiteContent(): Promise<SiteContent> {
+  try {
+    const endpoint = new URL(`${SUPABASE_URL}/rest/v1/site_publications`);
+    endpoint.searchParams.set("id", `eq.${CMS_CONTENT_ID}`);
+    endpoint.searchParams.set("select", "content");
+    const response = await fetch(endpoint, {
+      headers: { apikey: SUPABASE_PUBLISHABLE_KEY },
+      cache: "no-store",
+    });
+    if (response.ok) {
+      const rows = await response.json() as Array<{ content: unknown }>;
+      if (rows[0]?.content) return normalizeSiteContent(rows[0].content);
+    }
+  } catch {
+    // La base anterior permanece como respaldo durante la migración.
+  }
   try {
     const row = await readRow();
     return parseContent(row?.published_json);
@@ -95,7 +81,7 @@ export async function saveDraft(input: unknown, email: string) {
   const row = await readRow();
   const now = Date.now();
   const published = row?.published_json ?? JSON.stringify(DEFAULT_SITE_CONTENT);
-  await binding().prepare(`
+  await (await binding()).prepare(`
     INSERT INTO site_content (id, draft_json, published_json, draft_updated_at, published_at, updated_by, version)
     VALUES (?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET draft_json = excluded.draft_json, draft_updated_at = excluded.draft_updated_at, updated_by = excluded.updated_by
@@ -110,38 +96,39 @@ export async function publishDraft(email: string) {
   const now = Date.now();
   const version = (row?.version ?? 0) + 1;
   const revisionId = crypto.randomUUID();
-  const revision = binding().prepare(
+  const database = await binding();
+  const revision = database.prepare(
     "INSERT INTO content_revisions (id, version, content_json, created_at, created_by, action) VALUES (?, ?, ?, ?, ?, ?)",
   ).bind(revisionId, version, json, now, email, "published");
-  const update = binding().prepare(`
+  const update = database.prepare(`
     INSERT INTO site_content (id, draft_json, published_json, draft_updated_at, published_at, updated_by, version)
     VALUES (?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET draft_json = excluded.draft_json, published_json = excluded.published_json,
       draft_updated_at = excluded.draft_updated_at, published_at = excluded.published_at, updated_by = excluded.updated_by, version = excluded.version
   `).bind(ROW_ID, json, json, now, now, email, version);
-  await binding().batch([revision, update]);
+  await database.batch([revision, update]);
   return { content, version, publishedAt: now };
 }
 
 export async function listRevisions(): Promise<ContentRevision[]> {
-  const result = await binding().prepare(
+  const result = await (await binding()).prepare(
     "SELECT id, version, created_at AS createdAt, created_by AS createdBy, action FROM content_revisions ORDER BY version DESC LIMIT 30",
   ).all<ContentRevision>();
   return result.results;
 }
 
 export async function restoreRevision(id: string, email: string) {
-  const revision = await binding().prepare("SELECT content_json FROM content_revisions WHERE id = ?").bind(id).first<{ content_json: string }>();
+  const revision = await (await binding()).prepare("SELECT content_json FROM content_revisions WHERE id = ?").bind(id).first<{ content_json: string }>();
   if (!revision) throw new Error("No se ha encontrado esa versión.");
   const content = parseContent(revision.content_json);
   const now = Date.now();
-  await binding().prepare("UPDATE site_content SET draft_json = ?, draft_updated_at = ?, updated_by = ? WHERE id = ?")
+  await (await binding()).prepare("UPDATE site_content SET draft_json = ?, draft_updated_at = ?, updated_by = ? WHERE id = ?")
     .bind(JSON.stringify(content), now, email, ROW_ID).run();
   return { content, updatedAt: now };
 }
 
 export async function listMedia(): Promise<MediaAsset[]> {
-  const result = await binding().prepare(`
+  const result = await (await binding()).prepare(`
     SELECT id, storage_key AS storageKey, filename, mime_type AS mimeType, size, alt_text AS altText,
       created_at AS createdAt, created_by AS createdBy FROM media_assets ORDER BY created_at DESC LIMIT 150
   `).all<Omit<MediaAsset, "url">>();
@@ -158,7 +145,7 @@ function publicMediaUrl(storageKey: string) {
 }
 
 export async function saveMediaMetadata(asset: Omit<MediaAsset, "url">) {
-  await binding().prepare(`
+  await (await binding()).prepare(`
     INSERT INTO media_assets (id, storage_key, filename, mime_type, size, alt_text, created_at, created_by)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `).bind(asset.id, asset.storageKey, asset.filename, asset.mimeType, asset.size, asset.altText, asset.createdAt, asset.createdBy).run();

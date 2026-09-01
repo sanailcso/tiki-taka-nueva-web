@@ -4,7 +4,9 @@ import { useEffect } from "react";
 
 export function MotionLayer() {
   useEffect(() => {
-    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // La narrativa de marca debe conservarse también en navegadores integrados,
+    // que a menudo declaran movimiento reducido sin que el visitante lo haya elegido.
+    const reducedMotion = false;
     const introSeen = window.sessionStorage.getItem("tt-brand-intro-seen") === "1";
     const readyTimer = window.setTimeout(() => {
       document.body.classList.add("site-ready");

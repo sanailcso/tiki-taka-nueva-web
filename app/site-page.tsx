@@ -137,9 +137,12 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
                 <div className={`card-signal ${card.logoUrl ? "cafetiko-signal" : ""}`} aria-hidden="true">
                   <strong>{String(index + 1).padStart(2, "0")}</strong><span /><span /><span />
                 </div>
-                {card.logoUrl && <img className="card-brand-logo" src={card.logoUrl} alt={`${card.title}, área de negocio de Tiki Taka Games`} />}
                 <div className="card-body">
-                  <p>{card.eyebrow}</p><h3>{card.title}</h3><span>{card.description}</span>
+                  <p>{card.eyebrow}</p>
+                  {card.logoUrl
+                    ? <h3 className="card-brand-title"><img src={card.logoUrl} alt={card.title} /></h3>
+                    : <h3>{card.title}</h3>}
+                  <span>{card.description}</span>
                   {card.href && card.label && <a href={card.href} target={card.href.startsWith("http") ? "_blank" : undefined} rel={card.href.startsWith("http") ? "noreferrer" : undefined}>{card.label} <b>↗</b></a>}
                 </div>
                 <div className="card-foot" aria-hidden="true"><span>TIKI TAKA GAMES</span><i /><b>0{index + 1}</b></div>

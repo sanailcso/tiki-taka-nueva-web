@@ -108,7 +108,7 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
                 <span className="play-motion-shade" aria-hidden="true" />
                 <span className="play-motion-cta"><small>JUEGA ONLINE</small><strong>{content.play.button} <b>↗</b></strong></span>
               </a>
-              <i className="play-chip chip-live" aria-hidden="true">LIVE</i>
+              <i className="play-chip chip-live" aria-hidden="true"><span />LIVE</i>
               <i className="play-chip chip-always" aria-hidden="true">24/7</i>
               <i className="play-chip chip-age" aria-hidden="true">+18</i>
             </div>

@@ -30,7 +30,6 @@ export function normalizeSiteContent(value: unknown): SiteContent {
   merged.salons = merged.salons.slice(0, 250);
   merged.motion.heroCycleSeconds = Math.min(30, Math.max(3, Number(merged.motion.heroCycleSeconds) || 6));
   merged.motion.machinesPlaybackRate = Math.min(1.5, Math.max(0.1, Number(merged.motion.machinesPlaybackRate) || 0.5));
-  merged.motion.playSceneHeight = Math.min(500, Math.max(140, Number(merged.motion.playSceneHeight) || 190));
+  merged.motion.playSceneHeight = Math.min(160, Math.max(120, Number(merged.motion.playSceneHeight) || 160));
   return merged;
 }
-

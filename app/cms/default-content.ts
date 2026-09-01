@@ -62,6 +62,6 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   jobs: { kicker: "Personas", title: "¿Quieres crecer con nosotros?", description: "Buscamos personas con iniciativa, cercanía y ganas de construir el futuro de Tiki Taka.", button: "Ver oportunidades", url: "https://empleo.tikitaka.es/" },
   footer: { tagline: "Más de 50 años creando experiencias de ocio.", email: "info@tikitaka.es", phone: "+34 968 57 32 01", address: "Av. Pinatar, 40\n30730 San Javier, Murcia", legalUrl: "https://www.tikitaka.es/aviso-legal/", privacyUrl: "https://www.tikitaka.es/politica-de-privacidad/", cookiesUrl: "https://www.tikitaka.es/politica-de-privacidad/", ethicsUrl: "https://canal-etico.tikitaka.es/es/" },
   seo: { title: "Tiki Taka Games · Nueva web", description: "Tiki Taka Games: más de 50 años creando experiencias de ocio presencial y online." },
-  motion: { heroCycleSeconds: 6, machinesPlaybackRate: 0.5, playSceneHeight: 190 },
+  motion: { heroCycleSeconds: 6, machinesPlaybackRate: 0.5, playSceneHeight: 160 },
   salons: [],
 };

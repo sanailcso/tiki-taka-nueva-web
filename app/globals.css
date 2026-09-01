@@ -228,9 +228,10 @@ h1 .hero-rise-late { color: white; animation-delay: .12s; }
 .cafetiko-card:hover { background: radial-gradient(circle at 82% 55%,rgba(241,45,58,.22),transparent 34%),linear-gradient(135deg,#141417 0%,#070708 62%); }
 .cafetiko-card .card-signal { right: 4%; color: rgba(255,255,255,.12); }
 .cafetiko-card .card-signal span { color: rgba(241,45,58,.44); }
-.card-brand-logo { position: absolute; z-index: 2; top: 66%; right: 4.5%; width: min(390px,34vw); height: 46%; object-fit: contain; mix-blend-mode: screen; transform: translateY(-50%); filter: drop-shadow(0 16px 30px rgba(0,0,0,.6)) drop-shadow(0 0 22px rgba(241,45,58,.16)); transition: transform .5s var(--ease),filter .5s var(--ease); }
-.cafetiko-card:hover .card-brand-logo { transform: translateY(-52%) scale(1.025); filter: drop-shadow(0 20px 38px rgba(0,0,0,.68)) drop-shadow(0 0 30px rgba(241,45,58,.24)); }
-.cafetiko-card .card-body { width: min(600px,48%); }
+.card-body .card-brand-title { display: flex; height: 112px; align-items: center; margin: -9px 0 12px; }
+.card-brand-title img { display: block; width: min(290px,27vw); height: 100%; object-fit: contain; object-position: left center; mix-blend-mode: screen; filter: drop-shadow(0 12px 24px rgba(0,0,0,.55)) drop-shadow(0 0 18px rgba(241,45,58,.15)); transition: transform .5s var(--ease),filter .5s var(--ease); }
+.cafetiko-card:hover .card-brand-title img { transform: scale(1.025); filter: drop-shadow(0 16px 30px rgba(0,0,0,.62)) drop-shadow(0 0 26px rgba(241,45,58,.24)); }
+.cafetiko-card .card-body { width: min(640px,57%); }
 .online-mark { position: absolute; top: -20px; right: -5px; color: rgba(0,0,0,.055); font-family: var(--font-display); font-size: 145px; font-weight: 800; letter-spacing: -.07em; }
 
 .finder { display: grid; grid-template-columns: .72fr 1.28fr; min-height: 790px; padding: 22px; background: var(--red); color: white; }
@@ -314,9 +315,6 @@ footer { background: #080809; color: white; }
 
 @media (max-width: 900px) {
   .story-traveller { display: none; }
-  .play-showcase { height: auto; border-radius: 38px 38px 0 0; }
-  .play-sticky { position: relative; height: auto; min-height: 0; padding-top: 90px; }
-  .play-cherry,.play-scene-rail { display: none; }
   .site-header { height: 82px; grid-template-columns: 1fr auto; padding: 0 22px; }
   .brand img { width: 88px; height: 54px; }
   .desktop-nav { display: none; }
@@ -598,7 +596,7 @@ section[id], footer[id] { scroll-margin-top: 84px; }
 .footer-signature { display: flex; align-items: center; justify-content: center; gap: clamp(12px,2.4vw,35px); overflow: hidden; padding: 62px 4vw 23px; color: rgba(255,255,255,.09); font: 800 clamp(62px,10vw,150px)/.75 var(--font-display); letter-spacing: -.065em; white-space: nowrap; }
 .footer-signature img { width: clamp(46px,6vw,88px); height: clamp(46px,6vw,88px); object-fit: contain; filter: drop-shadow(0 0 24px rgba(242,5,50,.38)); }
 
-@media (max-width: 1100px) {
+@media (max-width: 650px) {
   .story-pulse { display: none; }
 }
 
@@ -613,8 +611,8 @@ section[id], footer[id] { scroll-margin-top: 84px; }
   .mobile-menu-trigger span:nth-child(2) { width: 13px; margin-left: auto; }
   .card-body { width: 63%; }
   .card-signal { right: 2%; width: 31vw; }
-  .card-brand-logo { top: 64%; right: 0; width: 42vw; opacity: .82; }
-  .cafetiko-card .card-body { width: 58%; }
+  .card-brand-title img { width: min(270px,38vw); }
+  .cafetiko-card .card-body { width: 61%; }
   .history { height: auto; padding: 90px 0; }
   .history-sticky { position: relative; min-height: 0; overflow: visible; }
   .history-shell { padding: 0; }
@@ -628,13 +626,17 @@ section[id], footer[id] { scroll-margin-top: 84px; }
 @media (max-width: 650px) {
   html { scroll-padding-top: 72px; }
   section[id],footer[id] { scroll-margin-top: 72px; }
+  .play-showcase { height: auto !important; border-radius: 38px 38px 0 0; }
+  .play-sticky { position: relative; height: auto; min-height: 0; padding-top: 90px; }
+  .play-cherry,.play-scene-rail { display: none; }
   .nav-cta { padding: 12px 14px; font-size: 8px; }
   .mobile-menu-trigger { width: 43px; height: 43px; }
   .business-grid { padding-bottom: 0; }
   .business-card { position: relative; top: auto; min-height: 440px; margin-bottom: 18px; padding: 30px 26px; }
   .card-body { inset: auto 26px 56px; width: auto; transform: none; }
   .cafetiko-card .card-body { width: auto; }
-  .card-brand-logo { top: 34%; right: -4%; width: 72%; height: 34%; opacity: .52; }
+  .card-body .card-brand-title { height: 94px; margin-bottom: 8px; }
+  .card-brand-title img { width: 235px; }
   .card-body > span { max-width: 90%; }
   .card-signal { top: 40px; right: 9px; width: 170px; height: 170px; transform: none; }
   .card-signal strong { font-size: 112px; }

@@ -224,9 +224,12 @@ h1 .hero-rise-late { color: white; animation-delay: .12s; }
 .card-orbit::after { inset: 90px; }
 .card-orbit i { position: absolute; width: 9px; height: 9px; background: white; border-radius: 50%; }
 .card-orbit i:nth-child(1) { top: 47px; left: 33px; }.card-orbit i:nth-child(2) { right: 27px; bottom: 73px; }.card-orbit i:nth-child(3) { left: 85px; bottom: 65px; }
-.cafetiko-card { border-color: rgba(241,45,58,.42); background: radial-gradient(circle at 80% 44%,rgba(241,45,58,.13),transparent 31%),#050506; box-shadow: 0 30px 85px rgba(0,0,0,.5),0 0 0 1px rgba(241,45,58,.05); }
-.cafetiko-card:hover { background: radial-gradient(circle at 80% 44%,rgba(241,45,58,.2),transparent 34%),#09090a; }
-.card-brand-logo { position: absolute; z-index: 1; top: 50%; right: 3.5%; width: min(470px,39vw); height: 78%; object-fit: contain; transform: translateY(-50%); filter: drop-shadow(0 18px 38px rgba(0,0,0,.45)); }
+.cafetiko-card { border-color: rgba(241,45,58,.42); background: radial-gradient(circle at 82% 55%,rgba(241,45,58,.16),transparent 30%),linear-gradient(135deg,#111114 0%,#050506 62%); box-shadow: 0 30px 85px rgba(0,0,0,.5),0 0 0 1px rgba(241,45,58,.05); }
+.cafetiko-card:hover { background: radial-gradient(circle at 82% 55%,rgba(241,45,58,.22),transparent 34%),linear-gradient(135deg,#141417 0%,#070708 62%); }
+.cafetiko-card .card-signal { right: 4%; color: rgba(255,255,255,.12); }
+.cafetiko-card .card-signal span { color: rgba(241,45,58,.44); }
+.card-brand-logo { position: absolute; z-index: 2; top: 66%; right: 4.5%; width: min(390px,34vw); height: 46%; object-fit: contain; mix-blend-mode: screen; transform: translateY(-50%); filter: drop-shadow(0 16px 30px rgba(0,0,0,.6)) drop-shadow(0 0 22px rgba(241,45,58,.16)); transition: transform .5s var(--ease),filter .5s var(--ease); }
+.cafetiko-card:hover .card-brand-logo { transform: translateY(-52%) scale(1.025); filter: drop-shadow(0 20px 38px rgba(0,0,0,.68)) drop-shadow(0 0 30px rgba(241,45,58,.24)); }
 .cafetiko-card .card-body { width: min(600px,48%); }
 .online-mark { position: absolute; top: -20px; right: -5px; color: rgba(0,0,0,.055); font-family: var(--font-display); font-size: 145px; font-weight: 800; letter-spacing: -.07em; }
 
@@ -610,7 +613,7 @@ section[id], footer[id] { scroll-margin-top: 84px; }
   .mobile-menu-trigger span:nth-child(2) { width: 13px; margin-left: auto; }
   .card-body { width: 63%; }
   .card-signal { right: 2%; width: 31vw; }
-  .card-brand-logo { right: -3%; width: 46vw; opacity: .48; }
+  .card-brand-logo { top: 64%; right: 0; width: 42vw; opacity: .82; }
   .cafetiko-card .card-body { width: 58%; }
   .history { height: auto; padding: 90px 0; }
   .history-sticky { position: relative; min-height: 0; overflow: visible; }
@@ -631,7 +634,7 @@ section[id], footer[id] { scroll-margin-top: 84px; }
   .business-card { position: relative; top: auto; min-height: 440px; margin-bottom: 18px; padding: 30px 26px; }
   .card-body { inset: auto 26px 56px; width: auto; transform: none; }
   .cafetiko-card .card-body { width: auto; }
-  .card-brand-logo { top: 28%; right: -7%; width: 92%; height: 62%; opacity: .2; }
+  .card-brand-logo { top: 34%; right: -4%; width: 72%; height: 34%; opacity: .52; }
   .card-body > span { max-width: 90%; }
   .card-signal { top: 40px; right: 9px; width: 170px; height: 170px; transform: none; }
   .card-signal strong { font-size: 112px; }

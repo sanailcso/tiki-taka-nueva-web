@@ -134,10 +134,10 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
               <article key={card.title} className={`business-card card-reveal stack-${["one", "two", "three", "four"][index] || "four"} ${index === 0 ? "featured" : ""} ${card.logoUrl ? "cafetiko-card" : ""}`}>
                 <span className="card-number">{String(index + 1).padStart(2, "0")}</span>
                 {index === 0 && <div className="card-orbit" aria-hidden="true"><i /><i /><i /></div>}
-                {card.logoUrl && <img className="card-brand-logo" src={card.logoUrl} alt={`${card.title}, área de negocio de Tiki Taka Games`} />}
-                {!card.logoUrl && <div className="card-signal" aria-hidden="true">
+                <div className={`card-signal ${card.logoUrl ? "cafetiko-signal" : ""}`} aria-hidden="true">
                   <strong>{String(index + 1).padStart(2, "0")}</strong><span /><span /><span />
-                </div>}
+                </div>
+                {card.logoUrl && <img className="card-brand-logo" src={card.logoUrl} alt={`${card.title}, área de negocio de Tiki Taka Games`} />}
                 <div className="card-body">
                   <p>{card.eyebrow}</p><h3>{card.title}</h3><span>{card.description}</span>
                   {card.href && card.label && <a href={card.href} target={card.href.startsWith("http") ? "_blank" : undefined} rel={card.href.startsWith("http") ? "noreferrer" : undefined}>{card.label} <b>↗</b></a>}

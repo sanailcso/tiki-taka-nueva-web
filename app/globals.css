@@ -451,9 +451,7 @@ footer { background: #080809; color: white; }
 .locator-map .leaflet-control-zoom a:hover { background: var(--red); color: white; }
 .locator-map .leaflet-control-attribution { border-radius: 8px 0 0 0; background: rgba(0,0,0,.62); color: rgba(255,255,255,.58); font-size: 9px; }.locator-map .leaflet-control-attribution a { color: rgba(255,255,255,.82); }
 .tt-marker { border: 0; background: transparent; }
-.tt-cherry { position: absolute; left: 5px; top: 7px; display: block; width: 22px; height: 22px; border: 3px solid white; border-radius: 54% 48% 55% 50%; background: var(--red); box-shadow: 0 4px 13px rgba(0,0,0,.5),0 0 0 6px rgba(242,5,50,.15); transition: transform .2s ease,box-shadow .2s ease; }
-.tt-cherry::before { content: ""; position: absolute; left: 10px; top: -11px; width: 8px; height: 12px; border: 3px solid var(--red); border-width: 3px 0 0 3px; border-radius: 8px 0 0; transform: rotate(23deg); }
-.tt-cherry::after { content: ""; position: absolute; left: 7px; bottom: -7px; width: 7px; height: 7px; background: var(--red); transform: rotate(45deg); }
+.tt-cherry { position: absolute; left: 4px; top: 4px; display: block; width: 24px; height: 24px; border: 3px solid white; border-radius: 50%; background: var(--red); box-shadow: 0 4px 13px rgba(0,0,0,.5),0 0 0 6px rgba(242,5,50,.15); transition: transform .2s ease,box-shadow .2s ease; }
 .tt-marker:hover .tt-cherry,.tt-marker.is-active .tt-cherry { transform: scale(1.25); box-shadow: 0 5px 18px rgba(0,0,0,.6),0 0 0 9px rgba(242,5,50,.22),0 0 22px rgba(242,5,50,.7); }
 .tt-cluster { display: grid !important; grid-template-rows: 1fr auto; place-items: center; padding: 10px 0 8px; border: 1px solid rgba(255,255,255,.68); border-radius: 50%; background: rgba(242,5,50,.92); box-shadow: 0 5px 25px rgba(0,0,0,.55),0 0 0 7px rgba(242,5,50,.18); color: white; font: 800 16px/1 var(--font-display); transition: transform .2s ease,box-shadow .2s ease; }
 .tt-cluster:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(0,0,0,.6),0 0 0 10px rgba(242,5,50,.2); }

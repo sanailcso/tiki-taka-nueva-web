@@ -6,6 +6,37 @@ import type { LayerGroup, Map as LeafletMap, Marker as LeafletMarker } from "lea
 export type Region = "Murcia" | "Comunidad Valenciana" | "Castilla-La Mancha" | "Andalucía";
 export type Salon = { name: string; region: Region; href: string; lat: number; lng: number };
 
+const publicSalonNames: Record<string, string> = {
+  "Alhama de Murcia · Centro": "Tiki Taka Alhama de Murcia",
+  "Alhama de Murcia · II": "Tiki Taka Alhama 2",
+  "Molina de Segura · I": "Tiki Taka Molina 1",
+  "Molina de Segura · II": "Tiki Taka Molina 2",
+  "Santomera · I": "Tiki Taka Santomera 1",
+  "Santomera · II": "Tiki Taka Santomera 2",
+  "Llíria · I": "Tiki Taka Llíria 1",
+  "Llíria · II": "Tiki Taka Llíria 2",
+  "Albacete · I": "Tiki Taka Albacete 1",
+  "Albacete · II": "Tiki Taka Albacete 2",
+  "Albacete · III": "Tiki Taka Albacete 3",
+  "La Vall d'Uixó": "Tiki Taka Vall d'Uixó",
+  "Riba-roja de Túria": "Tiki Taka Riba-Roja",
+  "Tavernes de la Valldigna": "Tiki Taka Tavernes Blanques",
+  "San Pedro del Pinatar": "Tiki Taka San Pedro",
+  "Benimàmet": "Tiki Taka Benimamet",
+  "Huércal-Overa": "Tiki Taka - Huércal Overa",
+  "Sangonera": "Apuestas de Murcia - Tiki Taka Sangonera La Verde",
+  "Los Alcázares": "Apuestas de Murcia - Tiki Taka Los Alcázares",
+  "Águilas · Alegría": "Apuestasdemurcia.es - Alegría de la Huerta",
+  "Águilas · El Puerto": "Apuestasdemurcia Salón El Puerto",
+  "Águilas · Las Yucas": "Apuestasdemurcia - Las Yucas",
+  "Águilas · Las Molinetas": "ApuestasdeMurcia.es - Sport Bar Las Molinetas",
+};
+
+export function getSalonDisplayName(name: string) {
+  if (/^(Tiki Taka|Apuestas(?:de| de) ?Murcia)/i.test(name)) return name;
+  return publicSalonNames[name] ?? `Tiki Taka ${name}`;
+}
+
 const salonData: Array<Omit<Salon, "lat" | "lng">> = [
   { name: "Alcantarilla", region: "Murcia", href: "https://maps.app.goo.gl/Naw5XAA4HSngbfJeA" },
   { name: "Alhama de Murcia · Centro", region: "Murcia", href: "https://maps.app.goo.gl/ZNuC3DQvFuou9mpi9" },
@@ -118,7 +149,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase("es");
-    return salons.filter((salon) => (region === "Todos" || salon.region === region) && (!needle || `${salon.name} ${salon.region}`.toLocaleLowerCase("es").includes(needle)));
+    return salons.filter((salon) => (region === "Todos" || salon.region === region) && (!needle || `${getSalonDisplayName(salon.name)} ${salon.region}`.toLocaleLowerCase("es").includes(needle)));
   }, [query, region, salons]);
   const displayedActive = active && filtered.find((salon) => salon.name === active.name);
 
@@ -178,7 +209,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
 
       filtered.forEach((salon) => {
         const marker = L.marker([salon.lat, salon.lng], {
-          title: `Tiki Taka ${salon.name}`,
+          title: getSalonDisplayName(salon.name),
           icon: L.divIcon({ html: '<span class="tt-cherry"><i></i></span>', className: "tt-marker", iconSize: [32, 40], iconAnchor: [16, 35] }),
         });
         marker.on("click", () => setActive(salon));
@@ -262,7 +293,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
               <button type="button" key={`${salon.region}-${salon.name}`} className={`locator-item ${active?.name === salon.name ? "active" : ""}`}
                 onMouseEnter={() => setActive(salon)} onFocus={() => setActive(salon)} onClick={() => selectSalon(salon, true)}>
                 <span className="locator-item-number">{String(index + 1).padStart(2, "0")}</span>
-                <span><strong>Tiki Taka {salon.name}</strong><small>{salon.region}</small></span><i aria-hidden="true">→</i>
+                <span><strong>{getSalonDisplayName(salon.name)}</strong><small>{salon.region}</small></span><i aria-hidden="true">→</i>
               </button>
             ))}
             {!filtered.length && <div className="locator-empty"><strong>Sin coincidencias</strong><span>Prueba con otra localidad o comunidad.</span></div>}
@@ -274,7 +305,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
           <div className="locator-zoom-hint" aria-hidden="true">Usa + / − para ampliar</div>
           {displayedActive && <article className="locator-card" aria-live="polite">
             <div className="locator-card-brand"><span>tiki taka</span><i /></div>
-            <p>Salón seleccionado</p><h3>Tiki Taka {displayedActive.name}</h3><span className="locator-card-region">⌖ {displayedActive.region}</span>
+            <p>Salón seleccionado</p><h3>{getSalonDisplayName(displayedActive.name)}</h3><span className="locator-card-region">⌖ {displayedActive.region}</span>
             <a href={displayedActive.href} target="_blank" rel="noreferrer">Cómo llegar <b>↗</b></a>
           </article>}
         </div>

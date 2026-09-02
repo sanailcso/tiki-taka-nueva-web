@@ -24,17 +24,25 @@ const publicSalonNames: Record<string, string> = {
   "San Pedro del Pinatar": "Tiki Taka San Pedro",
   "Benimàmet": "Tiki Taka Benimamet",
   "Huércal-Overa": "Tiki Taka - Huércal Overa",
-  "Sangonera": "Apuestas de Murcia - Tiki Taka Sangonera La Verde",
-  "Los Alcázares": "Apuestas de Murcia - Tiki Taka Los Alcázares",
-  "Águilas · Alegría": "Apuestasdemurcia.es - Alegría de la Huerta",
-  "Águilas · El Puerto": "Apuestasdemurcia Salón El Puerto",
-  "Águilas · Las Yucas": "Apuestasdemurcia - Las Yucas",
-  "Águilas · Las Molinetas": "ApuestasdeMurcia.es - Sport Bar Las Molinetas",
+  "Sangonera": "Tiki Taka Sangonera La Verde",
+  "Los Alcázares": "Tiki Taka Los Alcázares",
+  "Águilas · Alegría": "Tiki Taka Águilas Alegría de la Huerta",
+  "Águilas · El Puerto": "Tiki Taka Águilas El Puerto",
+  "Águilas · Las Yucas": "Tiki Taka Águilas Las Yucas",
+  "Águilas · Las Molinetas": "Tiki Taka Águilas Las Molinetas",
 };
 
 export function getSalonDisplayName(name: string) {
-  if (/^(Tiki Taka|Apuestas(?:de| de) ?Murcia)/i.test(name)) return name;
-  return publicSalonNames[name] ?? `Tiki Taka ${name}`;
+  const mappedName = publicSalonNames[name];
+  if (mappedName) return mappedName;
+
+  const cleanName = name
+    .replace(/^Apuestas\s*de\s*Murcia(?:\.es)?\s*(?:-\s*)?/i, "")
+    .replace(/^Salón\s+/i, "")
+    .trim();
+
+  if (/^Tiki Taka\b/i.test(cleanName)) return cleanName;
+  return `Tiki Taka ${cleanName || name}`;
 }
 
 const salonData: Array<Omit<Salon, "lat" | "lng">> = [

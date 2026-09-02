@@ -602,6 +602,31 @@ section[id], footer[id] { scroll-margin-top: 84px; }
 @media (max-width: 650px) {
   html { scroll-padding-top: 72px; }
   section[id],footer[id] { scroll-margin-top: 72px; }
+  .play-showcase { height: 230vh !important; border-radius: 38px 38px 0 0; }
+  .play-sticky { padding-top: 76px; }
+  .play-layout { display: block; width: 100%; height: auto; min-height: 0; padding: 0 18px 58px; transform: none; }
+  .play-copy { position: absolute; z-index: 3; inset: 18px 18px auto; transition: opacity .55s ease,transform .65s cubic-bezier(.2,.75,.25,1),filter .55s ease; }
+  .play-showcase[data-phase="two"] .play-copy,.play-showcase[data-phase="three"] .play-copy { opacity: 0; filter: blur(8px); transform: translateY(-30px) scale(.96); pointer-events: none; }
+  .play-copy h2 { margin-bottom: 16px; font-size: clamp(39px,12vw,54px); }
+  .play-copy > p { font-size: 15px; line-height: 1.55; }
+  .play-route { margin: 16px 0; }
+  .play-tags { gap: 6px; margin: 18px 0; }
+  .play-tags span { padding: 7px 10px; font-size: 10px; }
+  .play-actions { gap: 12px; }
+  .play-actions .button { min-height: 48px; }
+  .play-visual { position: absolute; z-index: 2; inset: 34px 8px 58px; min-height: 0; opacity: 0; transform: translateY(28px) scale(.76); transition: opacity .55s ease,transform .75s cubic-bezier(.2,.8,.2,1); }
+  .play-showcase[data-phase="two"] .play-visual { opacity: 1; transform: translateY(0) scale(.92); }
+  .play-showcase[data-phase="three"] .play-visual { opacity: 1; transform: translateY(0) scale(1); }
+  .play-motion { width: min(82vw,calc(100vh - 190px),390px); }
+  .play-motion-cta { bottom: 29px; }
+  .play-chip { padding: 8px 11px; font-size: 9px; }
+  .chip-live { top: 15%; right: 5%; }
+  .chip-always { bottom: 15%; left: 4%; }
+  .chip-age { right: 10%; bottom: 7%; }
+  .play-cherry { z-index: 6; }
+  .play-cherry small { display: none; }
+  .play-ticker { position: absolute; z-index: 5; right: 0; bottom: 0; left: 0; }
+  .play-ticker > div { padding: 13px 0; }
   .nav-cta { padding: 12px 14px; font-size: 8px; }
   .mobile-menu-trigger { width: 43px; height: 43px; }
   .business-grid { padding-bottom: 18vh; }

@@ -99,14 +99,19 @@ export function MotionLayer() {
         const progress = clamp(-rect.top / range);
         const smooth = progress * progress * (3 - 2 * progress);
         const entry = clamp((window.innerHeight - rect.top) / (window.innerHeight * .8));
-        const orbitProgress = clamp((progress - .18) / .67);
+        const mobileScene = window.innerWidth <= 650;
+        const orbitProgress = clamp((progress - (mobileScene ? .34 : .18)) / (mobileScene ? .54 : .67));
         const angle = (-2.7 + orbitProgress * Math.PI * 2.45);
-        const radiusX = 10.5 + Math.sin(orbitProgress * Math.PI) * 4.5;
-        const radiusY = 18 + Math.sin(orbitProgress * Math.PI) * 3;
-        const cherryX = 74 + Math.cos(angle) * radiusX;
-        const cherryY = 51 + Math.sin(angle) * radiusY;
-        const cherryScale = .55 + Math.sin(clamp(progress / .82) * Math.PI) * .95;
-        const cherryOpacity = clamp(entry * 1.5) * (1 - clamp((progress - .84) / .13));
+        const radiusX = mobileScene ? 38 : 10.5 + Math.sin(orbitProgress * Math.PI) * 4.5;
+        const radiusY = mobileScene ? 21 : 18 + Math.sin(orbitProgress * Math.PI) * 3;
+        const cherryX = (mobileScene ? 50 : 74) + Math.cos(angle) * radiusX;
+        const cherryY = (mobileScene ? 53 : 51) + Math.sin(angle) * radiusY;
+        const cherryScale = mobileScene
+          ? .52 + Math.sin(orbitProgress * Math.PI) * .58
+          : .55 + Math.sin(clamp(progress / .82) * Math.PI) * .95;
+        const cherryOpacity = mobileScene
+          ? clamp((progress - .31) / .1) * (1 - clamp((progress - .91) / .07))
+          : clamp(entry * 1.5) * (1 - clamp((progress - .84) / .13));
         playSection.style.setProperty("--play-progress", String(smooth));
         playSection.style.setProperty("--play-content-y", `${(1 - entry) * 54 - smooth * 12}px`);
         playSection.style.setProperty("--play-layer-a", `${-entry * window.innerHeight * .58 - smooth * 70}px`);
@@ -118,7 +123,7 @@ export function MotionLayer() {
         playSection.style.setProperty("--play-cherry-rotation", `${smooth * 1260}deg`);
         playSection.style.setProperty("--play-cherry-opacity", String(cherryOpacity));
         playSection.style.setProperty("--play-visual-scale", String(.9 + smooth * .1));
-        playSection.dataset.phase = progress < .3 ? "one" : progress < .68 ? "two" : "three";
+        playSection.dataset.phase = progress < (mobileScene ? .32 : .3) ? "one" : progress < (mobileScene ? .72 : .68) ? "two" : "three";
       }
 
       if (!reducedMotion && historySection && historyWindow && historyTrack) {

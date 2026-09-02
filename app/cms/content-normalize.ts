@@ -29,6 +29,10 @@ export function normalizeSiteContent(value: unknown): SiteContent {
   if (cafetiko && !merged.areas.cards.some((card) => card.title.trim().toLocaleLowerCase("es") === "cafetiko")) {
     merged.areas.cards.push(structuredClone(cafetiko));
   }
+  const currentCafetiko = merged.areas.cards.find((card) => card.title.trim().toLocaleLowerCase("es") === "cafetiko");
+  if (currentCafetiko && currentCafetiko.eyebrow.trim().toLocaleLowerCase("es") === "nueva línea de restauración") {
+    currentCafetiko.eyebrow = "Línea de restauración";
+  }
   if (merged.areas.description === "Espacios de ocio, apuestas deportivas y soluciones para establecimientos, con una atención cercana y una identidad reconocible.") {
     merged.areas.description = DEFAULT_SITE_CONTENT.areas.description;
   }

@@ -107,6 +107,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
   const mapRef = useRef<LeafletMap | null>(null);
   const markerLayerRef = useRef<LayerGroup | null>(null);
   const markersRef = useRef(new Map<string, LeafletMarker>());
+  const filtersRef = useRef<HTMLDivElement>(null);
   const activeNameRef = useRef("");
   const [mapReady, setMapReady] = useState(false);
   const [mapZoom, setMapZoom] = useState(7);
@@ -227,6 +228,10 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
     });
   };
 
+  const scrollFilters = (direction: -1 | 1) => {
+    filtersRef.current?.scrollBy({ left: direction * 190, behavior: "smooth" });
+  };
+
   return (
     <div className="salon-map" data-reveal="scale">
       <div className="locator-mobile-toggle" role="group" aria-label="Vista del localizador">
@@ -239,12 +244,16 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
             <span className="eyebrow">Red Tiki Taka</span>
             <h3>Elige tu salón</h3>
             <label className="locator-search">
-              <span aria-hidden="true">⌕</span><span className="sr-only">Buscar por localidad</span>
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Busca una localidad" />
+              <span aria-hidden="true">⌕</span><span className="sr-only">Busca tu Tiki Taka</span>
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Busca tu Tiki Taka" />
               {query && <button type="button" aria-label="Borrar búsqueda" onClick={() => setQuery("")}>×</button>}
             </label>
-            <div className="locator-filters" aria-label="Filtrar por comunidad">
-              {regions.map((item) => <button type="button" key={item.value} className={region === item.value ? "active" : ""} onClick={() => setRegion(item.value)}>{item.label}</button>)}
+            <div className="locator-filter-nav">
+              <button type="button" className="locator-filter-arrow" aria-label="Ver filtros anteriores" onClick={() => scrollFilters(-1)}>‹</button>
+              <div className="locator-filters" ref={filtersRef} aria-label="Filtrar por comunidad">
+                {regions.map((item) => <button type="button" key={item.value} className={region === item.value ? "active" : ""} onClick={() => setRegion(item.value)}>{item.label}</button>)}
+              </div>
+              <button type="button" className="locator-filter-arrow" aria-label="Ver más filtros" onClick={() => scrollFilters(1)}>›</button>
             </div>
             <div className="locator-count"><strong>{filtered.length}</strong><span>{filtered.length === 1 ? "salón encontrado" : "salones encontrados"}</span></div>
           </div>

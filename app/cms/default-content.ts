@@ -46,7 +46,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       { eyebrow: "Experiencia presencial", title: "Salones de juego", description: "Espacios actuales, atención cercana y entretenimiento para disfrutar del momento.", label: "Explorar", href: "#salones" },
       { eyebrow: "Soluciones para negocios", title: "Terminales de hostelería", description: "Instalación, mantenimiento y acompañamiento para cada establecimiento.", label: "Visitar web", href: "https://tikitakamaquinasrecreativas.com/" },
       { eyebrow: "Emoción deportiva", title: "Apuestas deportivas", description: "Una oferta integrada en nuestros espacios y adaptada a la evolución del sector." },
-      { eyebrow: "Nueva línea de restauración", title: "Cafetiko", description: "Cafeterías con ambiente de toda la vida, atención cercana y una identidad actual inspirada en el estilo Tiki Taka.", logoUrl: "/cafetiko-logo.webp" },
+      { eyebrow: "Línea de restauración", title: "Cafetiko", description: "Cafeterías con ambiente de toda la vida, atención cercana y una identidad actual inspirada en el estilo Tiki Taka.", logoUrl: "/cafetiko-logo.webp" },
     ],
   },
   finder: { kicker: "Nuestros salones", title: "Tu Tiki Taka, más cerca de ti.", description: "Explora nuestra red de salones de una forma diferente. Pasa por cada punto para descubrir la ubicación y abrir las indicaciones para llegar.", count: "68", countLabel: "ubicaciones conectadas en cuatro territorios", directoryLabel: "Ver directorio oficial", directoryUrl: "https://www.tikitaka.es/salones-de-juego/" },

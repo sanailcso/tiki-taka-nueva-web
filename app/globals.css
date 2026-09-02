@@ -228,10 +228,10 @@ h1 .hero-rise-late { color: white; animation-delay: .12s; }
 .cafetiko-card:hover { background: radial-gradient(circle at 82% 55%,rgba(241,45,58,.22),transparent 34%),linear-gradient(135deg,#141417 0%,#070708 62%); }
 .cafetiko-card .card-signal { right: 4%; color: rgba(255,255,255,.12); }
 .cafetiko-card .card-signal span { color: rgba(241,45,58,.44); }
-.card-body .card-brand-title { display: flex; height: 190px; align-items: center; margin: -16px 0 8px; }
+.card-body .card-brand-title { display: flex; height: 190px; align-items: center; margin: 7px 0 8px; }
 .card-brand-title img { display: block; width: auto; height: 100%; object-fit: contain; object-position: left center; filter: drop-shadow(0 16px 30px rgba(0,0,0,.58)) drop-shadow(0 0 24px rgba(241,45,58,.18)); transition: transform .5s var(--ease),filter .5s var(--ease); }
 .cafetiko-card:hover .card-brand-title img { transform: scale(1.025); filter: drop-shadow(0 16px 30px rgba(0,0,0,.62)) drop-shadow(0 0 26px rgba(241,45,58,.24)); }
-.cafetiko-card .card-body { width: min(640px,57%); }
+.cafetiko-card .card-body { inset: 46% auto auto 42px; width: min(640px,57%); transform: translateY(-50%); }
 .online-mark { position: absolute; top: -20px; right: -5px; color: rgba(0,0,0,.055); font-family: var(--font-display); font-size: 145px; font-weight: 800; letter-spacing: -.07em; }
 
 .finder { display: grid; grid-template-columns: .72fr 1.28fr; min-height: 790px; padding: 22px; background: var(--red); color: white; }
@@ -419,7 +419,10 @@ footer { background: #080809; color: white; }
 .locator-search input { min-width: 0; border: 0; outline: 0; background: transparent; color: white; font: 650 15px var(--font-body); }
 .locator-search input::placeholder { color: rgba(255,255,255,.43); }
 .locator-search button { width: 29px; height: 29px; border: 0; border-radius: 50%; background: rgba(255,255,255,.08); color: white; cursor: pointer; }
-.locator-filters { display: flex; gap: 7px; margin-top: 12px; padding-bottom: 3px; overflow-x: auto; scrollbar-width: none; }
+.locator-filter-nav { display: grid; grid-template-columns: 31px minmax(0,1fr) 31px; align-items: center; gap: 6px; margin-top: 12px; }
+.locator-filter-arrow { display: grid; width: 31px; height: 31px; place-items: center; border: 1px solid rgba(255,255,255,.14); border-radius: 50%; background: rgba(255,255,255,.055); color: white; font: 500 22px/1 var(--font-body); cursor: pointer; transition: border-color .2s ease,background .2s ease,transform .2s ease; }
+.locator-filter-arrow:hover,.locator-filter-arrow:focus-visible { outline: none; border-color: var(--red); background: var(--red); transform: scale(1.06); }
+.locator-filters { display: flex; gap: 7px; padding: 2px 1px 3px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; mask-image: linear-gradient(90deg,transparent 0,black 10px,black calc(100% - 10px),transparent 100%); }
 .locator-filters::-webkit-scrollbar { display: none; }
 .locator-filters button { flex: 0 0 auto; padding: 9px 12px; border: 1px solid rgba(255,255,255,.12); border-radius: 99px; background: transparent; color: rgba(255,255,255,.7); font: 800 10px var(--font-body); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
 .locator-filters button:hover,.locator-filters button:focus-visible,.locator-filters button.active { outline: none; border-color: var(--red); background: var(--red); color: white; }
@@ -488,7 +491,7 @@ footer { background: #080809; color: white; }
   .locator-shell.show-map .locator-map-wrap { display: block; }
   .locator-panel-head { padding: 18px 18px 15px; }
   .locator-panel-head h3 { margin: 9px 0 15px; font-size: 26px; }
-  .locator-filters { margin-top: 9px; }
+  .locator-filter-nav { margin-top: 9px; }
   .locator-count { margin-top: 10px; }
   .locator-list { padding-bottom: 10px; }
   .locator-geolocate { top: 68px; left: 14px; }
@@ -632,8 +635,8 @@ section[id], footer[id] { scroll-margin-top: 84px; }
   .business-grid { padding-bottom: 18vh; }
   .business-card { min-height: 440px; padding: 30px 26px; }
   .card-body { inset: auto 26px 56px; width: auto; transform: none; }
-  .cafetiko-card .card-body { width: auto; }
-  .card-body .card-brand-title { height: 162px; margin: -8px 0 8px; }
+  .cafetiko-card .card-body { inset: auto 26px 50px; width: auto; transform: none; }
+  .card-body .card-brand-title { height: 162px; margin: 7px 0 8px; }
   .card-brand-title img { width: auto; max-width: min(74vw,290px); }
   .card-body > span { max-width: 90%; }
   .card-signal { top: 40px; right: 9px; width: 170px; height: 170px; transform: none; }
@@ -641,4 +644,11 @@ section[id], footer[id] { scroll-margin-top: 84px; }
   .card-foot { left: 26px; right: 26px; bottom: 22px; }
   .footer-signature { padding-top: 43px; font-size: 52px; }
   .footer-signature img { width: 41px; height: 41px; }
+  .history-sticky { align-items: flex-start; min-height: 100svh; }
+  .history-shell { padding-block: 86px 28px; }
+  .history-top { grid-template-columns: minmax(0,1fr); gap: 17px; align-items: start; }
+  .history h2 { font-size: clamp(40px,12vw,52px); }
+  .history-top > p { max-width: 100%; margin: 0; font-size: 16px; line-height: 1.55; }
+  .history-progress { margin-top: 24px; }
+  .timeline-window { margin-top: 34px; }
 }

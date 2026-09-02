@@ -210,7 +210,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
       filtered.forEach((salon) => {
         const marker = L.marker([salon.lat, salon.lng], {
           title: getSalonDisplayName(salon.name),
-          icon: L.divIcon({ html: '<span class="tt-cherry"><i></i></span>', className: "tt-marker", iconSize: [32, 40], iconAnchor: [16, 35] }),
+          icon: L.divIcon({ html: '<span class="tt-cherry"></span>', className: "tt-marker", iconSize: [32, 32], iconAnchor: [16, 16] }),
         });
         marker.on("click", () => setActive(salon));
         marker.on("mouseover", () => setActive(salon));

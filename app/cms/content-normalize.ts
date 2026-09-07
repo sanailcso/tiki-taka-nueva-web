@@ -25,6 +25,8 @@ export function normalizeSiteContent(value: unknown): SiteContent {
   if (merged.intro.title === "Mucho más que una empresa de juego.") {
     merged.intro.title = "Una forma diferente de entender el ocio.";
   }
+  const salonsProof = merged.proof.values.find((item) => item.label.trim().toLocaleLowerCase("es") === "salones de juego");
+  if (salonsProof?.value === "+60" || salonsProof?.value === "60") salonsProof.value = "+70";
   const cafetiko = DEFAULT_SITE_CONTENT.areas.cards.find((card) => card.title === "Cafetiko");
   if (cafetiko && !merged.areas.cards.some((card) => card.title.trim().toLocaleLowerCase("es") === "cafetiko")) {
     merged.areas.cards.push(structuredClone(cafetiko));

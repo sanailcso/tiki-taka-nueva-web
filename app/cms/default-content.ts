@@ -23,7 +23,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       { id: "machines", type: "video", src: "/hero-machines.mp4", poster: "/hero-machines-poster.webp", alt: "Máquinas de juego Tiki Taka", playbackRate: 0.5 },
     ],
   },
-  proof: { values: [{ value: "+50", label: "años de experiencia" }, { value: "+60", label: "salones de juego" }, { value: "2", label: "mundos conectados" }], note: "Tradición que impulsa el futuro." },
+  proof: { values: [{ value: "+50", label: "años de experiencia" }, { value: "+70", label: "salones de juego" }, { value: "2", label: "mundos conectados" }], note: "Tradición que impulsa el futuro." },
   intro: {
     kicker: "El grupo",
     title: "Una forma diferente de entender el ocio.",

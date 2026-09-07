@@ -149,7 +149,6 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
   const filtersRef = useRef<HTMLDivElement>(null);
   const activeNameRef = useRef("");
   const [mapReady, setMapReady] = useState(false);
-  const [mapZoom, setMapZoom] = useState(7);
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState<Region | "Todos">("Todos");
   const [active, setActive] = useState<Salon | null>(null);
@@ -175,7 +174,6 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
         maxZoom: 19,
       }).addTo(map);
       const markerLayer = L.layerGroup().addTo(map);
-      map.on("zoomend", () => setMapZoom(map.getZoom()));
       mapRef.current = map;
       markerLayerRef.current = markerLayer;
       setMapReady(true);
@@ -193,28 +191,6 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
       markerLayerRef.current.clearLayers();
       markersRef.current.clear();
 
-      if (mapZoom <= 8 && filtered.length > 1) {
-        const grouped = filtered.reduce((result, salon) => {
-          (result[salon.region] ||= []).push(salon);
-          return result;
-        }, {} as Partial<Record<Region, Salon[]>>);
-        Object.entries(grouped).forEach(([regionName, regionSalons]) => {
-          if (!regionSalons?.length) return;
-          const lat = regionSalons.reduce((sum, salon) => sum + salon.lat, 0) / regionSalons.length;
-          const lng = regionSalons.reduce((sum, salon) => sum + salon.lng, 0) / regionSalons.length;
-          const cluster = L.marker([lat, lng], {
-            title: `${regionSalons.length} salones en ${regionName}`,
-            icon: L.divIcon({ html: `<span>${regionSalons.length}</span><small>${regionName === "Comunidad Valenciana" ? "CV" : regionName === "Castilla-La Mancha" ? "CLM" : regionName.slice(0, 3)}</small>`, className: "tt-cluster", iconSize: [56, 56], iconAnchor: [28, 28] }),
-          });
-          cluster.on("click", () => {
-            const bounds = L.latLngBounds(regionSalons.map((salon) => [salon.lat, salon.lng] as [number, number]));
-            mapRef.current?.fitBounds(bounds, { padding: [55, 55], maxZoom: 11 });
-          });
-          markerLayerRef.current?.addLayer(cluster);
-        });
-        return;
-      }
-
       filtered.forEach((salon) => {
         const marker = L.marker([salon.lat, salon.lng], {
           title: getSalonDisplayName(salon.name),
@@ -229,7 +205,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
     }
     renderMarkers();
     return () => { cancelled = true; };
-  }, [filtered, mapReady, mapZoom]);
+  }, [filtered, mapReady]);
 
   useEffect(() => {
     if (!mapReady || !mapRef.current || !filtered.length) return;
@@ -294,7 +270,6 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
               </div>
               <button type="button" className="locator-filter-arrow" aria-label="Ver más filtros" onClick={() => scrollFilters(1)}>›</button>
             </div>
-            <div className="locator-count"><strong>{filtered.length}</strong><span>{filtered.length === 1 ? "salón encontrado" : "salones encontrados"}</span></div>
           </div>
           <div className="locator-list">
             {filtered.map((salon, index) => (

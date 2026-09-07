@@ -238,9 +238,6 @@ h1 .hero-rise-late { color: white; animation-delay: .12s; }
 .finder-copy { align-self: center; padding: 92px max(4vw, calc((100vw - 1320px)/2)); padding-right: 5vw; }
 .finder h2 { margin-top: 33px; font-size: clamp(55px, 6.4vw, 92px); line-height: .94; }
 .finder-copy > p { max-width: 570px; margin: 25px 0 0; color: rgba(255,255,255,.75); font-size: 17px; line-height: 1.65; }
-.finder-stat { display: flex; align-items: center; gap: 17px; margin-top: 37px; }
-.finder-stat strong { font-family: var(--font-display); font-size: 68px; font-weight: 800; letter-spacing: -.07em; line-height: .8; }
-.finder-stat span { padding-left: 17px; border-left: 1px solid rgba(255,255,255,.38); font-size: 12px; font-weight: 800; line-height: 1.5; letter-spacing: .09em; text-transform: uppercase; }
 .finder-directory { display: inline-flex; align-items: center; gap: 35px; margin-top: 35px; padding-bottom: 7px; border-bottom: 2px solid white; font-size: 12px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
 .finder-directory b { font-size: 16px; transition: transform .2s ease; }.finder-directory:hover b { transform: translate(3px,-2px); }
 
@@ -426,8 +423,6 @@ footer { background: #080809; color: white; }
 .locator-filters::-webkit-scrollbar { display: none; }
 .locator-filters button { flex: 0 0 auto; padding: 9px 12px; border: 1px solid rgba(255,255,255,.12); border-radius: 99px; background: transparent; color: rgba(255,255,255,.7); font: 800 10px var(--font-body); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
 .locator-filters button:hover,.locator-filters button:focus-visible,.locator-filters button.active { outline: none; border-color: var(--red); background: var(--red); color: white; }
-.locator-count { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; color: rgba(255,255,255,.58); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.locator-count strong { color: white; font: 800 19px var(--font-display); letter-spacing: -.04em; }
 .locator-list { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: var(--red) transparent; scrollbar-width: thin; }
 .locator-item { position: relative; display: grid; grid-template-columns: 31px 1fr auto; align-items: center; gap: 11px; width: 100%; min-height: 74px; padding: 13px 20px; border: 0; border-bottom: 1px solid rgba(255,255,255,.075); background: transparent; color: white; text-align: left; cursor: pointer; transition: background .2s ease,padding .2s ease; }
 .locator-item::before { content: ""; position: absolute; inset: 8px auto 8px 0; width: 3px; border-radius: 0 4px 4px 0; background: var(--red); transform: scaleY(0); transition: transform .2s ease; }
@@ -453,10 +448,6 @@ footer { background: #080809; color: white; }
 .tt-marker { border: 0; background: transparent; }
 .tt-cherry { position: absolute; left: 4px; top: 4px; display: block; width: 24px; height: 24px; border: 3px solid white; border-radius: 50%; background: var(--red); box-shadow: 0 4px 13px rgba(0,0,0,.5),0 0 0 6px rgba(242,5,50,.15); transition: transform .2s ease,box-shadow .2s ease; }
 .tt-marker:hover .tt-cherry,.tt-marker.is-active .tt-cherry { transform: scale(1.25); box-shadow: 0 5px 18px rgba(0,0,0,.6),0 0 0 9px rgba(242,5,50,.22),0 0 22px rgba(242,5,50,.7); }
-.tt-cluster { display: grid !important; grid-template-rows: 1fr auto; place-items: center; padding: 10px 0 8px; border: 1px solid rgba(255,255,255,.68); border-radius: 50%; background: rgba(242,5,50,.92); box-shadow: 0 5px 25px rgba(0,0,0,.55),0 0 0 7px rgba(242,5,50,.18); color: white; font: 800 16px/1 var(--font-display); transition: transform .2s ease,box-shadow .2s ease; }
-.tt-cluster:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(0,0,0,.6),0 0 0 10px rgba(242,5,50,.2); }
-.tt-cluster small { font: 900 9px/1 var(--font-body); letter-spacing: .06em; text-transform: uppercase; }
-.tt-cluster::after { content: ""; position: absolute; top: 5px; right: 7px; width: 5px; height: 7px; border-top: 2px solid white; border-radius: 6px; transform: rotate(34deg); }
 .locator-geolocate { position: absolute; z-index: 500; top: 18px; left: 18px; display: flex; align-items: center; gap: 7px; padding: 11px 15px; border: 1px solid rgba(255,255,255,.16); border-radius: 99px; background: rgba(18,18,21,.9); color: white; font: 850 11px var(--font-body); letter-spacing: .07em; text-transform: uppercase; backdrop-filter: blur(14px); cursor: pointer; }
 .locator-geolocate:hover,.locator-geolocate:focus-visible { outline: none; background: var(--red); }.locator-geolocate span { color: #ff6d87; font-size: 15px; }.locator-geolocate:hover span { color: white; }
 .locator-card { position: absolute; z-index: 500; right: 22px; bottom: 22px; width: min(286px,calc(100% - 44px)); padding: 18px 20px; border: 1px solid rgba(255,255,255,.17); border-radius: 24px; background: rgba(15,15,18,.9); color: white; box-shadow: 0 20px 55px rgba(0,0,0,.4); backdrop-filter: blur(18px); animation: locator-card-in .28s ease both; }
@@ -490,7 +481,6 @@ footer { background: #080809; color: white; }
   .locator-panel-head { padding: 18px 18px 15px; }
   .locator-panel-head h3 { margin: 9px 0 15px; font-size: 26px; }
   .locator-filter-nav { margin-top: 9px; }
-  .locator-count { margin-top: 10px; }
   .locator-list { padding-bottom: 10px; }
   .locator-geolocate { top: 68px; left: 14px; }
   .locator-map .leaflet-control-zoom { margin-top: 68px; }

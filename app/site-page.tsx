@@ -157,10 +157,6 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
           <div className="section-kicker light"><span>05</span><i /> {content.finder.kicker}</div>
           <h2>{content.finder.title}</h2>
           <p>{content.finder.description}</p>
-          <div className="finder-stat">
-            <strong>{content.finder.count}</strong>
-            <span>{content.finder.countLabel}</span>
-          </div>
           <a className="finder-directory" href={content.finder.directoryUrl} target="_blank" rel="noreferrer">{content.finder.directoryLabel} <b>↗</b></a>
         </div>
         <SalonMap salons={content.salons.length ? content.salons : undefined} />

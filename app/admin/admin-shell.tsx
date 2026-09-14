@@ -373,7 +373,7 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={Boolean(deletingMediaId)}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" disabled={!mediaToDelete || Boolean(deletingMediaId)} onClick={(event) => {
+            <AlertDialogAction className="cms-confirm-delete" variant="destructive" disabled={!mediaToDelete || Boolean(deletingMediaId)} onClick={(event) => {
               event.preventDefault();
               if (mediaToDelete) void removeMedia(mediaToDelete);
             }}>

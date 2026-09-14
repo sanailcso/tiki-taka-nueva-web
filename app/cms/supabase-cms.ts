@@ -213,6 +213,26 @@ export async function addCmsMediaUrl(url: string, kind: "image" | "video"): Prom
   return asset;
 }
 
+export async function deleteCmsMedia(id: string) {
+  await currentProfile();
+  const { data, error: assetError } = await supabase
+    .from("media_assets")
+    .select("id, storage_path")
+    .eq("id", id)
+    .single();
+  if (assetError || !data) throw new Error("No se ha encontrado el archivo en la biblioteca.");
+
+  if (data.storage_path) {
+    const { error: storageError } = await supabase.storage
+      .from(CMS_MEDIA_BUCKET)
+      .remove([data.storage_path]);
+    if (storageError) throw new Error(message(storageError, "No se pudo eliminar el archivo del almacenamiento."));
+  }
+
+  const { error: metadataError } = await supabase.from("media_assets").delete().eq("id", id);
+  if (metadataError) throw new Error(message(metadataError, "No se pudo eliminar el archivo de la biblioteca."));
+}
+
 export async function updateCmsCredentials(input: { currentPassword: string; username: string; newPassword?: string }) {
   const username = input.username.trim();
   if (!/^[a-zA-Z0-9._-]{3,32}$/.test(username)) {
@@ -238,4 +258,3 @@ export async function getPublishedContentFromSupabase() {
   if (error || !data) throw new Error("No se pudo cargar el contenido publicado.");
   return normalizeSiteContent(data.content);
 }
-

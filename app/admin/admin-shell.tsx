@@ -17,12 +17,16 @@ import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
+  AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { DEFAULT_SALONS, getSalonDisplayName } from "../salon-map";
 import {
-  addCmsMediaUrl, logoutCms, publishCmsDraft, restoreCmsRevision, saveCmsDraft,
+  addCmsMediaUrl, deleteCmsMedia, logoutCms, publishCmsDraft, restoreCmsRevision, saveCmsDraft,
   updateCmsCredentials, uploadCmsMedia,
 } from "../cms/supabase-cms";
 import type { ContentRevision, MediaAsset, SiteContent } from "../cms/types";
@@ -160,6 +164,8 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
   const [salonQuery, setSalonQuery] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
   const [mediaKind, setMediaKind] = useState<"image" | "video">("image");
+  const [mediaToDelete, setMediaToDelete] = useState<MediaAsset | null>(null);
+  const [deletingMediaId, setDeletingMediaId] = useState<string | null>(null);
   const [security, setSecurity] = useState({ username: userName, currentPassword: "", newPassword: "", confirmPassword: "" });
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -213,6 +219,17 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
       toast.success("URL añadida a la biblioteca");
     } catch (error) { toast.error(error instanceof Error ? error.message : "No se pudo añadir la URL"); }
     finally { setBusy(null); }
+  };
+
+  const removeMedia = async (asset: MediaAsset) => {
+    setDeletingMediaId(asset.id);
+    try {
+      await deleteCmsMedia(asset.id);
+      setAssets((current) => current.filter((item) => item.id !== asset.id));
+      setMediaToDelete(null);
+      toast.success(asset.size ? "Archivo eliminado definitivamente" : "URL eliminada de la biblioteca");
+    } catch (error) { toast.error(error instanceof Error ? error.message : "No se pudo eliminar"); }
+    finally { setDeletingMediaId(null); }
   };
 
   const restore = async (id: string) => {
@@ -331,8 +348,40 @@ export function AdminShell({ initial, revisions: initialRevisions, media: initia
           <small className="cms-url-note">La URL debe apuntar directamente al archivo. Si la web externa bloquea imágenes enlazadas, es preferible subir el archivo.</small>
         </div>
       </div>
-      <div className="cms-media-grid">{assets.map((asset) => <article key={asset.id}>{asset.mimeType.startsWith("image/") ? <img src={asset.url} alt={asset.altText || asset.filename} /> : <video src={asset.url} muted preload="metadata" />}<div><strong>{asset.filename}</strong><small>{asset.size ? `${(asset.size / 1024 / 1024).toFixed(1)} MB` : "URL externa"}</small><button type="button" onClick={() => { navigator.clipboard.writeText(asset.url); toast.success("Ruta copiada"); }}>Copiar ruta</button></div></article>)}</div>
+      <div className="cms-media-grid">{assets.map((asset) => <article key={asset.id}>
+        {asset.mimeType.startsWith("image/") ? <img src={asset.url} alt={asset.altText || asset.filename} /> : <video src={asset.url} muted preload="metadata" />}
+        <div className="cms-media-meta">
+          <strong title={asset.filename}>{asset.filename}</strong>
+          <small>{asset.size ? `${(asset.size / 1024 / 1024).toFixed(1)} MB` : "URL externa"}</small>
+          <div className="cms-media-actions">
+            <button type="button" onClick={() => { navigator.clipboard.writeText(asset.url); toast.success("Ruta copiada"); }}>Copiar ruta</button>
+            <button type="button" className="cms-media-delete" aria-label={`Eliminar ${asset.filename}`} disabled={deletingMediaId === asset.id} onClick={() => setMediaToDelete(asset)}>
+              {deletingMediaId === asset.id ? <Loader2 className="animate-spin" /> : <Trash2 />}Eliminar
+            </button>
+          </div>
+        </div>
+      </article>)}</div>
       {!assets.length && <div className="cms-empty"><ImageIcon /><h2>La biblioteca está vacía</h2><p>Sube un archivo o añade una URL para empezar.</p></div>}
+      <AlertDialog open={Boolean(mediaToDelete)} onOpenChange={(open) => { if (!open && !deletingMediaId) setMediaToDelete(null); }}>
+        <AlertDialogContent className="cms-delete-dialog">
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Eliminar este archivo?</AlertDialogTitle>
+            <AlertDialogDescription>
+              «{mediaToDelete?.filename}» desaparecerá de la biblioteca{mediaToDelete?.size ? " y del almacenamiento" : ""}. Esta acción no se puede deshacer.
+              {mediaToDelete && JSON.stringify(content).includes(mediaToDelete.url) && <strong> Esta imagen o vídeo está en uso en la web; sustitúyelo en la sección correspondiente para evitar que deje de mostrarse.</strong>}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={Boolean(deletingMediaId)}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" disabled={!mediaToDelete || Boolean(deletingMediaId)} onClick={(event) => {
+              event.preventDefault();
+              if (mediaToDelete) void removeMedia(mediaToDelete);
+            }}>
+              {deletingMediaId ? <Loader2 className="animate-spin" /> : <Trash2 />}Eliminar definitivamente
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>;
 
     return <><SectionHead eyebrow="Seguridad" title="Historial de publicaciones" description="Cada publicación crea una copia recuperable. Restaurar nunca modifica la web pública: primero vuelve como borrador." /><div className="cms-history">{revisions.map((revision) => <article key={revision.id}><span>v{revision.version}</span><div><strong>Publicada</strong><small>{new Date(revision.createdAt).toLocaleString("es-ES")}</small></div><Button variant="outline" onClick={() => restore(revision.id)} disabled={busy === "restore"}><ArchiveRestore />Recuperar como borrador</Button></article>)}</div>{!revisions.length && <div className="cms-empty"><History /><h2>Aún no hay versiones</h2><p>La primera aparecerá cuando publiques desde este panel.</p></div>}</>;

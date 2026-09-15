@@ -76,10 +76,10 @@ const salonData: Array<Omit<Salon, "lat" | "lng">> = [
   { name: "Santomera · II", region: "Murcia", href: "https://maps.app.goo.gl/vi1HpDoUWddr54586" },
   { name: "Torreagüera", region: "Murcia", href: "https://maps.app.goo.gl/EK5TDaPugByN3hTJ8" },
   { name: "Totana", region: "Murcia", href: "https://maps.app.goo.gl/NNe4bcUX7DvTmtxD7" },
-  { name: "Águilas · Alegría", region: "Murcia", href: "https://maps.google.com/maps/dir//Apuestasdemurcia.es+-+Alegr%C3%ADa+de+la+Huerta+Cj%C3%B3n.+de+la+Huerta,+6+30880+%C3%81guilas+Murcia/@37.407768,-1.586064,16z" },
-  { name: "Águilas · El Puerto", region: "Murcia", href: "https://maps.google.com/maps/dir//Apuestasdemurcia+Sal%C3%B3n+El+Puerto+P.%C2%BA+de+Isaac+Peral,+11+30880+%C3%81guilas+Murcia/@37.4045896,-1.5794117,15z" },
-  { name: "Águilas · Las Yucas", region: "Murcia", href: "https://maps.google.com/maps/dir//Apuestasdemurcia+-+Las+Yucas+C.+Pintor+Rosales,+5+30880+%C3%81guilas+Murcia/@37.402459,-1.592166,16z" },
-  { name: "Águilas · Las Molinetas", region: "Murcia", href: "https://maps.google.com/maps/dir//ApuestasdeMurcia.es+-+Sport+Bar+Las+Molinetas+C.+Murcia,+15+30880+%C3%81guilas+Murcia/@37.4111048,-1.5772367,16z" },
+  { name: "Águilas · Alegría", region: "Murcia", href: "https://www.google.com/maps/search/?api=1&query=Tiki+Taka+Alegr%C3%ADa+de+la+Huerta%2C+Callej%C3%B3n+de+la+Huerta+6%2C+30880+%C3%81guilas" },
+  { name: "Águilas · El Puerto", region: "Murcia", href: "https://www.google.com/maps/search/?api=1&query=Tiki+Taka+El+Puerto%2C+Paseo+de+Isaac+Peral+11%2C+30880+%C3%81guilas" },
+  { name: "Águilas · Las Yucas", region: "Murcia", href: "https://www.google.com/maps/search/?api=1&query=Tiki+Taka+Las+Yucas%2C+Calle+Pintor+Rosales+5%2C+30880+%C3%81guilas" },
+  { name: "Águilas · Las Molinetas", region: "Murcia", href: "https://www.google.com/maps/search/?api=1&query=Tiki+Taka+Las+Molinetas%2C+Calle+Murcia+15%2C+30880+%C3%81guilas" },
   { name: "Albatera", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/11Ugn1AQHCc3PKzS8" },
   { name: "Alfarp", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/wgE5UC9TTvbwAUfeA" },
   { name: "Alicante", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/BEQfhukJtYtac3Ez9" },
@@ -92,7 +92,7 @@ const salonData: Array<Omit<Salon, "lat" | "lng">> = [
   { name: "Elche", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/XcZhULQu5cRJdg8R6" },
   { name: "Llíria · I", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/7jDKaP2Cbe1hLa6M6" },
   { name: "Llíria · II", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/pNR3ruRfikFkPLEaA" },
-  { name: "Massanassa", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/Nm5dXmEZjmQqckXq6" },
+  { name: "Massamagrell", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/Nm5dXmEZjmQqckXq6" },
   { name: "Ontinyent", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/V3xJk48EGREXcXSF6" },
   { name: "Paterna", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/b5Q6wyWQN1HNg3FX8" },
   { name: "Pedreguer", region: "Comunidad Valenciana", href: "https://maps.app.goo.gl/R9A7muMR2pSSH5NdA" },
@@ -110,9 +110,9 @@ const salonData: Array<Omit<Salon, "lat" | "lng">> = [
   { name: "Albacete · II", region: "Castilla-La Mancha", href: "https://maps.app.goo.gl/eBkBDQEkmuf2ePt1A" },
   { name: "Albacete · III", region: "Castilla-La Mancha", href: "https://maps.app.goo.gl/9MSKLebMbZgEcJDE6" },
   { name: "Tomelloso", region: "Castilla-La Mancha", href: "https://maps.app.goo.gl/i3q6mjgF2ueXRpSk8" },
-  { name: "Las Candelas", region: "Andalucía", href: "https://maps.app.goo.gl/e9MTaBrLtRzaFj4D8" },
+  { name: "Las Candelas", region: "Andalucía", href: "https://www.google.com/maps/search/?api=1&query=Tiki+Taka+Las+Candelas%2C+Almer%C3%ADa" },
   { name: "Vintage", region: "Andalucía", href: "https://maps.app.goo.gl/bZvQqnV4jPFxRCXL9" },
-  { name: "Almanzora", region: "Andalucía", href: "https://maps.app.goo.gl/AQ7aqizXqe1xTdgQ7" },
+  { name: "Almanzora", region: "Andalucía", href: "https://www.google.com/maps/search/?api=1&query=Tiki+Taka+Almanzora%2C+Almer%C3%ADa" },
   { name: "Huércal-Overa", region: "Andalucía", href: "https://maps.app.goo.gl/kU8EDMAqbjcCe7gN8" },
 ];
 
@@ -127,7 +127,7 @@ const coordinates: Record<string, [number, number]> = {
   "Águilas · Alegría": [37.407768, -1.586064], "Águilas · El Puerto": [37.4045896, -1.5794117], "Águilas · Las Yucas": [37.402459, -1.592166],
   "Águilas · Las Molinetas": [37.4111048, -1.5772367], "Albatera": [38.18, -0.87], "Alfarp": [39.277, -0.56], "Alicante": [38.345, -0.49], "Alzira": [39.15, -0.44],
   "Benijófar": [38.08, -0.74], "Cabo Roig": [37.91, -0.74], "Carcaixent": [39.12, -0.45], "Ciudad Quesada": [38.06, -0.72], "Dénia": [38.84, 0.106],
-  "Elche": [38.27, -0.7], "Llíria · I": [39.63, -0.6], "Llíria · II": [39.633, -0.596], "Massanassa": [39.41, -0.4], "Ontinyent": [38.82, -0.61],
+  "Elche": [38.27, -0.7], "Llíria · I": [39.63, -0.6], "Llíria · II": [39.633, -0.596], "Massamagrell": [39.576127, -0.3281499], "Ontinyent": [38.82, -0.61],
   "Paterna": [39.5, -0.44], "Pedreguer": [38.79, 0.03], "Pilar de la Horadada": [37.865, -0.79], "Riba-roja de Túria": [39.545, -0.57],
   "Sagunto": [39.68, -0.28], "San Isidro": [38.17, -0.84], "Tavernes de la Valldigna": [39.07, -0.27], "Torrent": [39.44, -0.46],
   "La Vall d'Uixó": [39.82, -0.23], "Vila-real": [39.94, -0.1], "Xàtiva": [38.99, -0.52], "Benimàmet": [39.51, -0.43],
@@ -260,7 +260,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
             <h3>Elige tu salón</h3>
             <label className="locator-search">
               <span aria-hidden="true">⌕</span><span className="sr-only">Busca tu Tiki Taka</span>
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Busca tu Tiki Taka" />
+              <input aria-label="Busca tu Tiki Taka" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Busca tu Tiki Taka" />
               {query && <button type="button" aria-label="Borrar búsqueda" onClick={() => setQuery("")}>×</button>}
             </label>
             <div className="locator-filter-nav">

@@ -58,14 +58,14 @@ export function HeroSlider({ slides, cycleSeconds }: { slides: HeroSlide[]; cycl
           <div
             key={slide.id}
             className={`hero-cms-slide ${index === active ? "is-active" : ""}`}
-            style={{ backgroundImage: `url(${JSON.stringify(slide.src).slice(1, -1)})` }}
+            style={{ backgroundImage: index === active ? `url(${JSON.stringify(slide.src).slice(1, -1)})` : "none" }}
             role="img" aria-label={slide.alt}
           />
         ))}
       </div>
       <div className="hero-slides-progress" aria-label="Imágenes de portada">
         {slides.map((slide, index) => (
-          <button key={slide.id} type="button" className={index === active ? "is-active" : ""} onClick={() => setActive(index)} aria-label={`Ver imagen ${index + 1}`}>
+          <button key={slide.id} type="button" className={index === active ? "is-active" : ""} onClick={() => setActive(index)} aria-label={`Ver ${slide.type === "video" ? "vídeo" : "imagen"} ${index + 1}`}>
             <i style={{ animationDuration: `${cycleSeconds}s` }} />
           </button>
         ))}

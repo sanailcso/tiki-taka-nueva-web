@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { DEFAULT_SITE_CONTENT } from "./cms/default-content";
-import { getPublishedContentFromSupabase } from "./cms/supabase-cms";
+import { getPublishedContentFromSupabase } from "./cms/supabase-public";
 import type { SiteContent } from "./cms/types";
 import { SitePage } from "./site-page";
 

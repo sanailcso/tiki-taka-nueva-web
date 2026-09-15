@@ -14,7 +14,7 @@ function resolveAdminPath(returnTo: string) {
 }
 
 export function LoginForm({ returnTo }: { returnTo: string }) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -25,7 +25,7 @@ export function LoginForm({ returnTo }: { returnTo: string }) {
     setBusy(true);
     setError("");
     try {
-      await loginCms(username, password);
+      await loginCms(email, password);
       window.location.assign(resolveAdminPath(returnTo));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "No se ha podido iniciar sesión.");
@@ -43,7 +43,7 @@ export function LoginForm({ returnTo }: { returnTo: string }) {
         <p>Gestiona contenido, multimedia, salones y publicaciones con una sesión segura.</p>
       </div>
       <form onSubmit={submit}>
-        <label><span>Usuario</span><div><UserRound /><Input autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} autoFocus /></div></label>
+        <label><span>Correo administrativo</span><div><UserRound /><Input type="email" inputMode="email" autoComplete="username" value={email} onChange={(event) => setEmail(event.target.value)} autoFocus required /></div></label>
         <label><span>Contraseña</span><div><LockKeyhole /><Input type={showPassword ? "text" : "password"} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} /><button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}>{showPassword ? <EyeOff /> : <Eye />}</button></div></label>
         {error && <p className="cms-login-error" role="alert">{error}</p>}
         <Button type="submit" disabled={busy}>{busy ? <Loader2 className="animate-spin" /> : <LockKeyhole />}{busy ? "Comprobando…" : "Entrar al backoffice"}</Button>

@@ -17,9 +17,11 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
   const logo = content.identity.logoUrl;
   const playUrl = content.identity.playUrl;
   return (
-    <main>
+    <>
+      <a className="skip-link" href="#contenido-principal">Saltar al contenido</a>
       <MotionLayer />
       <SiteHeader logo={logo} navigation={content.navigation} />
+      <main id="contenido-principal">
 
       <section className="hero" id="inicio">
         <HeroSlider slides={content.hero.slides} cycleSeconds={content.motion.heroCycleSeconds} />
@@ -227,6 +229,7 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
         </div>
         <div className="footer-bottom"><span>© 2026 <BrandName name={content.identity.brandName} /> Games</span><div><a href={content.footer.legalUrl} target="_blank" rel="noreferrer">Aviso legal</a><a href={content.footer.privacyUrl} target="_blank" rel="noreferrer">Privacidad</a><a href={content.footer.cookiesUrl} target="_blank" rel="noreferrer">Cookies</a><a href={content.footer.ethicsUrl} target="_blank" rel="noreferrer">Canal ético</a></div><strong>JUEGA CON RESPONSABILIDAD · +18</strong></div>
       </footer>
-    </main>
+      </main>
+    </>
   );
 }

@@ -50,16 +50,22 @@ export function HeroSlider({ slides, cycleSeconds }: { slides: HeroSlide[]; cycl
             key={slide.id}
             ref={(node) => { if (node) videoRefs.current.set(slide.id, node); else videoRefs.current.delete(slide.id); }}
             className={`hero-cms-slide hero-cms-video ${index === active ? "is-active" : ""}`}
-            muted playsInline loop preload="none" poster={slide.poster} aria-label={slide.alt}
+            muted playsInline loop preload="none" poster={slide.poster} aria-hidden="true"
           >
-            <source src={slide.src} />
+            <source src={slide.src} media="(min-width: 901px)" />
+            <track kind="captions" src="decorative-captions.vtt" srcLang="es" label="Sin audio" default />
           </video>
         ) : (
-          <div
+          <img
             key={slide.id}
             className={`hero-cms-slide ${index === active ? "is-active" : ""}`}
-            style={{ backgroundImage: index === active ? `url(${JSON.stringify(slide.src).slice(1, -1)})` : "none" }}
-            role="img" aria-label={slide.alt}
+            src={slide.src}
+            alt={slide.alt}
+            width="1600"
+            height="900"
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
+            decoding="async"
           />
         ))}
       </div>

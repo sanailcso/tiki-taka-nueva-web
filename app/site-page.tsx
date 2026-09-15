@@ -78,7 +78,7 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
           <div className="play-glow glow-one" aria-hidden="true" />
           <div className="play-glow glow-two" aria-hidden="true" />
           <div className="play-cherry" aria-hidden="true">
-            <span><img src={`${assetBase}tikitaka-cherry.png`} alt="" /></span>
+            <span><img src={`${assetBase}tikitaka-cherry.png`} alt="" width="106" height="105" /></span>
             <small>Del salón a tu pantalla</small>
           </div>
           <div className="play-scene-rail" aria-hidden="true">
@@ -106,6 +106,7 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
               <a className="play-motion" href={playUrl} target="_blank" rel="noreferrer" aria-label={content.play.button}>
                 <video data-smart-video muted playsInline loop preload="none" poster={content.play.motionPoster} aria-hidden="true">
                   <source src={content.play.motionVideo} />
+                  <track kind="captions" src={`${assetBase}decorative-captions.vtt`} srcLang="es" label="Sin audio" default />
                 </video>
                 <span className="play-motion-shade" aria-hidden="true" />
                 <span className="play-motion-cta"><small>JUEGA ONLINE</small><strong>{content.play.button} <b>↗</b></strong></span>
@@ -142,7 +143,7 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
                 <div className="card-body">
                   <p>{card.eyebrow}</p>
                   {card.logoUrl
-                    ? <h3 className="card-brand-title"><img src={card.logoUrl} alt={card.title} /></h3>
+                    ? <h3 className="card-brand-title"><img src={card.logoUrl} alt={card.title} width="716" height="590" loading="lazy" decoding="async" /></h3>
                     : <h3>{card.title}</h3>}
                   <span>{card.description}</span>
                   {card.href && card.label && <a href={card.href} target={card.href.startsWith("http") ? "_blank" : undefined} rel={card.href.startsWith("http") ? "noreferrer" : undefined}>{card.label} <b>↗</b></a>}
@@ -187,7 +188,7 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
                     <b>{entry.date}</b><h3>{entry.title}</h3><p>{entry.description}</p>
                   </article>
                 ))}
-                <div className="timeline-end" aria-hidden="true"><img src={`${assetBase}tikitaka-cherry.png`} alt="" /><span>SEGUIMOS JUGANDO</span></div>
+                <div className="timeline-end" aria-hidden="true"><img src={`${assetBase}tikitaka-cherry.png`} alt="" width="106" height="105" loading="lazy" /><span>SEGUIMOS JUGANDO</span></div>
               </div>
             </div>
           </div>
@@ -217,10 +218,10 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
       </section>
 
       <footer id="contacto">
-        <div className="footer-signature" aria-hidden="true"><span>TIKI TAKA</span><img src={`${assetBase}tikitaka-cherry.png`} alt="" /><span>GAMES</span></div>
+        <div className="footer-signature" aria-hidden="true"><span>TIKI TAKA</span><img src={`${assetBase}tikitaka-cherry.png`} alt="" width="106" height="105" loading="lazy" /><span>GAMES</span></div>
         <div className="footer-main">
           <div className="footer-brand">
-            <img src={logo} alt="Tiki Taka Games" />
+            <img src={logo} alt="Tiki Taka Games" width="1080" height="616" loading="lazy" decoding="async" />
             <p>{content.footer.tagline}</p>
           </div>
           <div><h3>El grupo</h3><a href="#grupo">Quiénes somos</a><a href="#historia">Nuestra historia</a><a href="#empleo">Empleo</a></div>

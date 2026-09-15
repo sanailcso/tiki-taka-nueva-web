@@ -51,5 +51,9 @@ test("la portada usa imágenes optimizadas y los datos corregidos", async () => 
   assert.match(map, /Massamagrell/);
   assert.doesNotMatch(map, /Apuestasde?Murcia/i);
   assert.match(normalized, /hero-headquarters\.webp/);
+  assert.match(normalized, /DEFAULT_SITE_CONTENT\.commitment\.url/);
+  assert.match(await text("index.html"), /"@type":"Organization"/);
+  assert.match(await text("index.html"), /"@type":"WebSite"/);
+  assert.match(await text("app/hero-slider.tsx"), /fetchPriority=\{index === 0 \? "high"/);
   assert.ok(image.size < 200_000, `La imagen principal pesa ${image.size} bytes.`);
 });

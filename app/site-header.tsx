@@ -44,7 +44,7 @@ export function SiteHeader({ logo, navigation }: SiteHeaderProps) {
   return (
     <header className="site-header">
       <a className="brand" href="#inicio" aria-label="Tiki Taka Games, inicio">
-        <img src={logo} alt="Tiki Taka Games" />
+        <img src={logo} alt="Tiki Taka Games" width="1080" height="616" decoding="async" />
       </a>
 
       <nav className="desktop-nav" aria-label="Navegación principal">
@@ -71,7 +71,7 @@ export function SiteHeader({ logo, navigation }: SiteHeaderProps) {
         <button className="mobile-menu-overlay" type="button" aria-label="Cerrar menú" onClick={closeMenu} />
         <div className="mobile-menu-sheet" id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Navegación principal">
           <div className="mobile-menu-top">
-            <img src={logo} alt="Tiki Taka Games" />
+            <img src={logo} alt="Tiki Taka Games" width="1080" height="616" decoding="async" />
             <button className="mobile-menu-close" type="button" aria-label="Cerrar menú" onClick={closeMenu} autoFocus>×</button>
           </div>
           <nav className="mobile-nav" aria-label="Navegación móvil">

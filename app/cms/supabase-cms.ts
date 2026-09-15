@@ -253,3 +253,12 @@ export async function updateCmsCredentials(input: { currentPassword: string; use
   await supabase.auth.signOut();
   return { username };
 }
+<<<<<<< HEAD
+=======
+
+export async function getPublishedContentFromSupabase() {
+  const { data, error } = await supabase.from("site_publications").select("content").eq("id", CMS_CONTENT_ID).single();
+  if (error || !data) throw new Error("No se pudo cargar el contenido publicado.");
+  return normalizeSiteContent(data.content);
+}
+>>>>>>> 21844aa41138c09fb1eb6bbdab6479d502d07a71

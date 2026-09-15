@@ -23,7 +23,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       { id: "machines", type: "video", src: "/hero-machines.mp4", poster: "/hero-machines-poster.webp", alt: "Máquinas de juego Tiki Taka", playbackRate: 0.5 },
     ],
   },
-  proof: { values: [{ value: "+50", label: "años de experiencia" }, { value: "Más de 70", label: "salones de juego" }, { value: "2", label: "mundos conectados" }], note: "Tradición que impulsa el futuro." },
+  proof: { values: [{ value: "+50", label: "años de experiencia" }, { value: "+70", label: "salones de juego" }, { value: "2", label: "mundos conectados" }], note: "Tradición que impulsa el futuro." },
   intro: {
     kicker: "El grupo",
     title: "Una forma diferente de entender el ocio.",
@@ -49,14 +49,14 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       { eyebrow: "Línea de restauración", title: "Cafetiko", description: "Cafeterías con ambiente de toda la vida, atención cercana y una identidad actual inspirada en el estilo Tiki Taka.", logoUrl: "/cafetiko-logo.webp" },
     ],
   },
-  finder: { kicker: "Nuestros salones", title: "Tu Tiki Taka, más cerca de ti.", description: "Explora nuestra red de salones de una forma diferente. Pasa por cada punto para descubrir la ubicación y abrir las indicaciones para llegar.", count: "Más de 70", countLabel: "ubicaciones conectadas en cuatro territorios", directoryLabel: "Ver directorio oficial", directoryUrl: "https://www.tikitaka.es/salones-de-juego/" },
+  finder: { kicker: "Nuestros salones", title: "Tu Tiki Taka, más cerca de ti.", description: "Explora nuestra red de salones de una forma diferente. Pasa por cada punto para descubrir la ubicación y abrir las indicaciones para llegar.", count: "+70", countLabel: "ubicaciones conectadas en cuatro territorios", directoryLabel: "Ver directorio oficial", directoryUrl: "https://www.tikitaka.es/salones-de-juego/" },
   history: {
     kicker: "Nuestra historia", title: "El futuro se construye con experiencia.", description: "Más de cinco décadas evolucionando sin perder el espíritu familiar con el que comenzó todo.",
     entries: [
       { date: "El origen", title: "Raíces familiares", description: "Más de cinco décadas de experiencia nacidas de la gestión cercana de máquinas recreativas y de juego." },
       { date: "2019", title: "Tiki Taka Games", description: "Las diferentes líneas de negocio se unifican bajo una misma marca para reforzar su identidad y posicionamiento." },
       { date: "2025", title: "Tiki Taka Play", description: "La experiencia del grupo da el salto al entorno digital con el lanzamiento de su plataforma de juego online." },
-      { date: "Hoy", title: "Presencial + digital", description: "Una red de más de 70 ubicaciones y una propuesta online que siguen creciendo bajo una misma visión de futuro.", active: true },
+      { date: "Hoy", title: "Presencial + digital", description: "Una red de +70 ubicaciones y una propuesta online que siguen creciendo bajo una misma visión de futuro.", active: true },
     ],
   },
   commitment: { kicker: "Nuestro compromiso", title: "El ocio solo tiene sentido si es responsable.", description: "Promovemos una experiencia segura, informada y exclusivamente para mayores de edad. La responsabilidad forma parte de nuestra manera de entender el sector.", label: "Conoce nuestro compromiso", url: "https://www.tikitaka.es/juego-responsable/el-juego-responsable-como-disfrutar-del-entretenimiento-sin-riesgos/" },

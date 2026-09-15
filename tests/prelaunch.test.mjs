@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 const root = new URL("../", import.meta.url);
 const text = (path) => readFile(new URL(path, root), "utf8");
@@ -42,11 +43,11 @@ test("la portada usa imágenes optimizadas y los datos corregidos", async () => 
     text("app/salon-map.tsx"),
     text("app/cms/content-normalize.ts"),
   ]);
-  const imagePath = join(new URL("public/", root).pathname.slice(1), "hero-headquarters.webp");
+  const imagePath = join(fileURLToPath(new URL("public/", root)), "hero-headquarters.webp");
   const image = await stat(imagePath);
 
-  assert.match(defaults, /value: "Más de 70"/);
-  assert.match(defaults, /Una red de más de 70 ubicaciones/);
+  assert.match(defaults, /value: "\+70"/);
+  assert.match(defaults, /Una red de \+70 ubicaciones/);
   assert.match(map, /Massamagrell/);
   assert.doesNotMatch(map, /Apuestasde?Murcia/i);
   assert.match(normalized, /hero-headquarters\.webp/);

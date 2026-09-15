@@ -35,11 +35,11 @@ export function normalizeSiteContent(value: unknown): SiteContent {
     merged.intro.title = "Una forma diferente de entender el ocio.";
   }
   const salonsProof = merged.proof.values.find((item) => item.label.trim().toLocaleLowerCase("es") === "salones de juego");
-  if (salonsProof && ["+60", "60", "68", "+70", "70", "más de 70"].includes(salonsProof.value.trim().toLocaleLowerCase("es"))) salonsProof.value = "Más de 70";
-  if (["+60", "60", "68", "+70", "70", "más de 70"].includes(merged.finder.count.trim().toLocaleLowerCase("es"))) merged.finder.count = "Más de 70";
+  if (salonsProof && ["+60", "60", "68", "+70", "70", "más de 70"].includes(salonsProof.value.trim().toLocaleLowerCase("es"))) salonsProof.value = "+70";
+  if (["+60", "60", "68", "+70", "70", "más de 70"].includes(merged.finder.count.trim().toLocaleLowerCase("es"))) merged.finder.count = "+70";
   merged.history.entries = merged.history.entries.map((entry) => ({
     ...entry,
-    description: entry.description.replace(/Una red de (?:68|\+?70|más de 70) ubicaciones/i, "Una red de más de 70 ubicaciones"),
+    description: entry.description.replace(/Una red de (?:68|\+?70|más de 70) ubicaciones/i, "Una red de +70 ubicaciones"),
   }));
   if (merged.footer.privacyUrl === "https://www.tikitaka.es/politica-de-privacidad/") {
     merged.footer.privacyUrl = "https://www.tikitaka.es/politica-privacidad/";

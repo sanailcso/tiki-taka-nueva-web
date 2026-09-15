@@ -149,6 +149,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
   const filtersRef = useRef<HTMLDivElement>(null);
   const activeNameRef = useRef("");
   const [mapReady, setMapReady] = useState(false);
+  const [shouldLoadMap, setShouldLoadMap] = useState(false);
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState<Region | "Todos">("Todos");
   const [active, setActive] = useState<Salon | null>(null);
@@ -161,9 +162,27 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
   const displayedActive = active && filtered.find((salon) => salon.name === active.name);
 
   useEffect(() => {
+    const node = mapNodeRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadMap(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoadMap) return;
     let cancelled = false;
     async function setupMap() {
       if (!mapNodeRef.current || mapRef.current) return;
+      await import("leaflet/dist/leaflet.css");
       const L = await import("leaflet");
       if (cancelled || !mapNodeRef.current) return;
       const map = L.map(mapNodeRef.current, { zoomControl: false, scrollWheelZoom: false, attributionControl: true, minZoom: 5, maxZoom: 18 }).setView([38.35, -1.05], 7);
@@ -180,7 +199,7 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
     }
     setupMap();
     return () => { cancelled = true; mapRef.current?.remove(); mapRef.current = null; markerLayerRef.current = null; };
-  }, []);
+  }, [shouldLoadMap]);
 
   useEffect(() => {
     if (!mapReady || !markerLayerRef.current || !mapRef.current) return;

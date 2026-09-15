@@ -5,13 +5,20 @@ import type { HeroSlide } from "./cms/types";
 
 export function HeroSlider({ slides, cycleSeconds }: { slides: HeroSlide[]; cycleSeconds: number }) {
   const [active, setActive] = useState(0);
+  const [loadedSlides, setLoadedSlides] = useState(() => new Set([0]));
   const [isVisible, setIsVisible] = useState(true);
   const mediaRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef(new Map<string, HTMLVideoElement>());
 
   useEffect(() => {
     if (slides.length < 2) return;
-    const timer = window.setInterval(() => setActive((current) => (current + 1) % slides.length), cycleSeconds * 1000);
+    const timer = window.setInterval(() => {
+      setActive((current) => {
+        const next = (current + 1) % slides.length;
+        setLoadedSlides((loaded) => new Set(loaded).add(next));
+        return next;
+      });
+    }, cycleSeconds * 1000);
     return () => window.clearInterval(timer);
   }, [cycleSeconds, slides.length]);
 
@@ -45,7 +52,7 @@ export function HeroSlider({ slides, cycleSeconds }: { slides: HeroSlide[]; cycl
   return (
     <>
       <div ref={mediaRef} className="hero-media" data-parallax="0.055">
-        {slides.map((slide, index) => slide.type === "video" ? (
+        {slides.map((slide, index) => !loadedSlides.has(index) ? null : slide.type === "video" ? (
           <video
             key={slide.id}
             ref={(node) => { if (node) videoRefs.current.set(slide.id, node); else videoRefs.current.delete(slide.id); }}
@@ -71,7 +78,7 @@ export function HeroSlider({ slides, cycleSeconds }: { slides: HeroSlide[]; cycl
       </div>
       <div className="hero-slides-progress" aria-label="Imágenes de portada">
         {slides.map((slide, index) => (
-          <button key={slide.id} type="button" className={index === active ? "is-active" : ""} onClick={() => setActive(index)} aria-label={`Ver ${slide.type === "video" ? "vídeo" : "imagen"} ${index + 1}`}>
+          <button key={slide.id} type="button" className={index === active ? "is-active" : ""} onClick={() => { setLoadedSlides((loaded) => new Set(loaded).add(index)); setActive(index); }} aria-label={`Ver ${slide.type === "video" ? "vídeo" : "imagen"} ${index + 1}`}>
             <i style={{ animationDuration: `${cycleSeconds}s` }} />
           </button>
         ))}

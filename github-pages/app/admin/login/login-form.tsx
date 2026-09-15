@@ -1,0 +1,54 @@
+"use client";
+
+import { useState } from "react";
+import { Eye, EyeOff, Loader2, LockKeyhole, UserRound } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { loginCms } from "../../cms/supabase-cms";
+
+function resolveAdminPath(returnTo: string) {
+  const marker = "/admin";
+  const index = window.location.pathname.lastIndexOf(marker);
+  const base = index >= 0 ? window.location.pathname.slice(0, index) : "";
+  return returnTo.startsWith(marker) ? `${base}${returnTo}` : `${base}${marker}`;
+}
+
+export function LoginForm({ returnTo }: { returnTo: string }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      await loginCms(email, password);
+      window.location.assign(resolveAdminPath(returnTo));
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "No se ha podido iniciar sesión.");
+      setBusy(false);
+    }
+  }
+
+  return <main className="cms-login">
+    <div className="cms-login-atmosphere" aria-hidden="true"><i /><i /><i /></div>
+    <section className="cms-login-card">
+      <div className="cms-login-brand"><span className="cms-mark">TT</span><div><strong>Tiki Taka</strong><small>Backoffice profesional</small></div></div>
+      <div className="cms-login-heading">
+        <span>Acceso privado</span>
+        <h1>Todo el control de la web, en un solo lugar.</h1>
+        <p>Gestiona contenido, multimedia, salones y publicaciones con una sesión segura.</p>
+      </div>
+      <form onSubmit={submit}>
+        <label><span>Correo administrativo</span><div><UserRound /><Input type="email" inputMode="email" autoComplete="username" value={email} onChange={(event) => setEmail(event.target.value)} autoFocus required /></div></label>
+        <label><span>Contraseña</span><div><LockKeyhole /><Input type={showPassword ? "text" : "password"} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} /><button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}>{showPassword ? <EyeOff /> : <Eye />}</button></div></label>
+        {error && <p className="cms-login-error" role="alert">{error}</p>}
+        <Button type="submit" disabled={busy}>{busy ? <Loader2 className="animate-spin" /> : <LockKeyhole />}{busy ? "Comprobando…" : "Entrar al backoffice"}</Button>
+      </form>
+      <small className="cms-login-note">Acceso protegido por Supabase Auth. Los intentos repetidos se limitan automáticamente.</small>
+    </section>
+  </main>;
+}

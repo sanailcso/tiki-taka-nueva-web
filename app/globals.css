@@ -520,25 +520,6 @@ section[id], footer[id] { scroll-margin-top: 84px; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
-@media (max-width: 650px) {
-  .brand-intro { display: none; }
-  .hero-scan,
-  .hero-vertical-word,
-  .brand-switch-play i,
-  .kinetic-strip > div,
-  .statement > div,
-  .play-glow,
-  .play-cherry > span::before,
-  .play-route i::after,
-  .play-chip,
-  .play-ticker > div,
-  .card-orbit,
-  .story-pulse-node::after,
-  .card-signal span,
-  .timeline-end img { animation: none !important; }
-  .pointer-glow { display: none; }
-}
-
 .story-pulse { --pulse-color: #fff; position: fixed; z-index: 81; left: 25px; top: 22vh; width: 24px; height: 57vh; color: var(--pulse-color); pointer-events: none; transition: color .35s ease; }
 .story-pulse-track { position: absolute; top: 0; bottom: 0; left: 7px; width: 1px; overflow: hidden; background: color-mix(in srgb,currentColor 21%,transparent); }
 .story-pulse-track i { position: absolute; inset: 0; background: var(--red); transform: scaleY(var(--page-progress)); transform-origin: top; box-shadow: 0 0 14px rgba(242,5,50,.7); }

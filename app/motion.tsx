@@ -5,12 +5,11 @@ import { useEffect } from "react";
 export function MotionLayer() {
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const compactMobile = window.matchMedia("(max-width: 650px)").matches;
     const introSeen = window.sessionStorage.getItem("tt-brand-intro-seen") === "1";
     const readyTimer = window.setTimeout(() => {
       document.body.classList.add("site-ready");
       window.sessionStorage.setItem("tt-brand-intro-seen", "1");
-    }, reducedMotion || compactMobile || introSeen ? 0 : 1050);
+    }, reducedMotion || introSeen ? 0 : 1050);
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
     const tunedVideos = document.querySelectorAll<HTMLVideoElement>("video[data-playback-rate]");
     const tuneVideo = (video: HTMLVideoElement) => {
@@ -92,7 +91,7 @@ export function MotionLayer() {
         if (pulseLabel) pulseLabel.textContent = current.label;
       }
 
-      if (!reducedMotion && !compactMobile && playSection) {
+      if (!reducedMotion && playSection) {
         const rect = playSection.getBoundingClientRect();
         const range = Math.max(1, rect.height - window.innerHeight);
         const progress = clamp(-rect.top / range);
@@ -125,7 +124,7 @@ export function MotionLayer() {
         playSection.dataset.phase = progress < (mobileScene ? .32 : .3) ? "one" : progress < (mobileScene ? .72 : .68) ? "two" : "three";
       }
 
-      if (!reducedMotion && !compactMobile && historySection && historyWindow && historyTrack) {
+      if (!reducedMotion && historySection && historyWindow && historyTrack) {
         const rect = historySection.getBoundingClientRect();
         const range = Math.max(1, rect.height - window.innerHeight);
         const progress = clamp(-rect.top / range);
@@ -136,7 +135,7 @@ export function MotionLayer() {
         historyEntries.forEach((entry, index) => entry.classList.toggle("is-current", index === currentIndex));
       }
 
-      if (!reducedMotion && !compactMobile) {
+      if (!reducedMotion) {
         document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((element) => {
           const speed = Number(element.dataset.parallax || 0.05);
           element.style.setProperty("--parallax-y", `${scroll * speed}px`);
@@ -169,7 +168,7 @@ export function MotionLayer() {
       onScroll();
     };
     addEventListener("resize", onResize);
-    if (!compactMobile) addEventListener("pointermove", onPointer, { passive: true });
+    addEventListener("pointermove", onPointer, { passive: true });
     document.addEventListener("click", onAnchorClick);
     return () => {
       observer.disconnect();
@@ -178,7 +177,7 @@ export function MotionLayer() {
       if (frame) cancelAnimationFrame(frame);
       removeEventListener("scroll", onScroll);
       removeEventListener("resize", onResize);
-      if (!compactMobile) removeEventListener("pointermove", onPointer);
+      removeEventListener("pointermove", onPointer);
       document.removeEventListener("click", onAnchorClick);
     };
   }, []);

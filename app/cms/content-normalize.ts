@@ -44,10 +44,6 @@ export function normalizeSiteContent(value: unknown): SiteContent {
   if (merged.footer.privacyUrl === "https://www.tikitaka.es/politica-de-privacidad/") {
     merged.footer.privacyUrl = "https://www.tikitaka.es/politica-privacidad/";
   }
-  if (!merged.commitment.label.trim()) merged.commitment.label = DEFAULT_SITE_CONTENT.commitment.label;
-  if (!/^https?:\/\//i.test(merged.commitment.url) || new URL(merged.commitment.url).pathname === "/") {
-    merged.commitment.url = DEFAULT_SITE_CONTENT.commitment.url;
-  }
   const cafetiko = DEFAULT_SITE_CONTENT.areas.cards.find((card) => card.title === "Cafetiko");
   if (cafetiko && !merged.areas.cards.some((card) => card.title.trim().toLocaleLowerCase("es") === "cafetiko")) {
     merged.areas.cards.push(structuredClone(cafetiko));

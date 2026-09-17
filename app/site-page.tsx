@@ -201,7 +201,6 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
           <div className="section-kicker light"><span>07</span><i /> {content.commitment.kicker}</div>
           <h2>{content.commitment.title}</h2>
           <p>{content.commitment.description}</p>
-          <a className="text-link light-link" href={content.commitment.url} target="_blank" rel="noreferrer">{content.commitment.label} <span>↗</span></a>
         </div>
       </section>
 

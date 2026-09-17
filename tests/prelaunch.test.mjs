@@ -38,10 +38,11 @@ test("el paquete inicial público no contiene el CMS ni credenciales administrat
 });
 
 test("la portada usa imágenes optimizadas y los datos corregidos", async () => {
-  const [defaults, map, normalized] = await Promise.all([
+  const [defaults, map, normalized, page] = await Promise.all([
     text("app/cms/default-content.ts"),
     text("app/salon-map.tsx"),
     text("app/cms/content-normalize.ts"),
+    text("app/site-page.tsx"),
   ]);
   const imagePath = join(fileURLToPath(new URL("public/", root)), "hero-headquarters.webp");
   const image = await stat(imagePath);
@@ -51,7 +52,7 @@ test("la portada usa imágenes optimizadas y los datos corregidos", async () => 
   assert.match(map, /Massamagrell/);
   assert.doesNotMatch(map, /Apuestasde?Murcia/i);
   assert.match(normalized, /hero-headquarters\.webp/);
-  assert.match(normalized, /DEFAULT_SITE_CONTENT\.commitment\.url/);
+  assert.doesNotMatch(page, /content\.commitment\.url/);
   assert.match(await text("index.html"), /"@type":"Organization"/);
   assert.match(await text("index.html"), /"@type":"WebSite"/);
   assert.match(await text("app/hero-slider.tsx"), /fetchPriority=\{index === 0 \? "high"/);

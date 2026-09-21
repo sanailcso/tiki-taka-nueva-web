@@ -5,6 +5,7 @@ import { DEFAULT_SITE_CONTENT } from "./cms/default-content";
 import { getPublishedContentFromSupabase } from "./cms/supabase-public";
 import type { SiteContent } from "./cms/types";
 import { SitePage } from "./site-page";
+import { AnalyticsConsent } from "./analytics-consent";
 
 function prefixLocalAssets<T>(value: T, assetBase: string): T {
   if (!assetBase) return value;
@@ -31,5 +32,10 @@ export function PublicSite({ assetBase = "" }: { assetBase?: string }) {
       .catch(() => undefined);
   }, [assetBase]);
 
-  return <SitePage content={content} assetBase={assetBase} />;
+  return (
+    <>
+      <SitePage content={content} assetBase={assetBase} />
+      <AnalyticsConsent />
+    </>
+  );
 }

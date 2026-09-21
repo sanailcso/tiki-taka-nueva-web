@@ -36,8 +36,9 @@ test("las páginas legales se generan con canonical propio y los enlaces son int
   const [page, consent, legal] = await Promise.all([text("app/site-page.tsx"), text("app/analytics-consent.tsx"), text("app/legal-page.tsx")]);
   assert.match(page, /assetBase\}aviso-legal/);
   assert.match(consent, /assetBase\}cookies/);
-  assert.match(legal, /B30165104/);
-  assert.doesNotMatch(legal, /Ley Orgánica 15\/1999|Amador Recreativos/);
+  assert.match(await text("app/cms/default-content.ts"), /SYMLOGIC, S\.L\. \(LEGITEC\)/);
+  assert.match(legal, /content\.legal|legal\.dpoName/);
+  assert.doesNotMatch(legal, /FENIX CONSULTING|Ley Orgánica 15\/1999|Amador Recreativos/);
 });
 
 test("el paquete inicial público no contiene el CMS ni credenciales administrativas", async () => {

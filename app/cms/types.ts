@@ -64,6 +64,23 @@ export type SiteContent = {
     cookiesUrl: string;
     ethicsUrl: string;
   };
+  legal: {
+    updatedAt: string;
+    companyName: string;
+    taxId: string;
+    registry: string;
+    address: string;
+    phone: string;
+    email: string;
+    privacyEmail: string;
+    dpoName: string;
+    dpoTaxId: string;
+    dpoEmail: string;
+    contactPurpose: string;
+    dataSource: string;
+    dataCategories: string;
+    rightsText: string;
+  };
   seo: { title: string; description: string };
   motion: { heroCycleSeconds: number; machinesPlaybackRate: number; playSceneHeight: number };
   salons: SalonEntry[];

@@ -7,6 +7,11 @@ const assetBase = import.meta.env.BASE_URL;
 const path = window.location.pathname.replace(/\/+$/, "");
 
 async function loadApp() {
+  const legalKind = (["aviso-legal", "privacidad", "cookies"] as const).find((kind) => path.endsWith(`/${kind}`));
+  if (legalKind) {
+    const { LegalPage } = await import("../app/legal-page");
+    return <LegalPage kind={legalKind} assetBase={assetBase} />;
+  }
   if (path.endsWith("/admin/preview")) {
     await import("../app/admin/admin.css");
     const { SupabaseDraftPreview } = await import("../app/admin/preview/supabase-preview");

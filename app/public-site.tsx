@@ -35,7 +35,7 @@ export function PublicSite({ assetBase = "" }: { assetBase?: string }) {
   return (
     <>
       <SitePage content={content} assetBase={assetBase} />
-      <AnalyticsConsent />
+      <AnalyticsConsent assetBase={assetBase} />
     </>
   );
 }

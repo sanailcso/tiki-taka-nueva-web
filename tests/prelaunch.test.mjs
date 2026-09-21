@@ -28,6 +28,18 @@ test("todas las rutas administrativas generadas quedan fuera de los buscadores",
   }
 });
 
+test("las páginas legales se generan con canonical propio y los enlaces son internos", async () => {
+  for (const route of ["aviso-legal", "privacidad", "cookies"]) {
+    const html = await text(`dist-pages/${route}/index.html`);
+    assert.match(html, new RegExp(`rel="canonical" href="https:\\/\\/www\\.tikitaka\\.es\\/${route}\\/"`));
+  }
+  const [page, consent, legal] = await Promise.all([text("app/site-page.tsx"), text("app/analytics-consent.tsx"), text("app/legal-page.tsx")]);
+  assert.match(page, /assetBase\}aviso-legal/);
+  assert.match(consent, /assetBase\}cookies/);
+  assert.match(legal, /B30165104/);
+  assert.doesNotMatch(legal, /Ley Orgánica 15\/1999|Amador Recreativos/);
+});
+
 test("el paquete inicial público no contiene el CMS ni credenciales administrativas", async () => {
   const assetsDir = new URL("dist-pages/assets/", root);
   const entryName = (await readdir(assetsDir)).find((name) => /^index-[\w-]+\.js$/.test(name));

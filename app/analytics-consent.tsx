@@ -52,7 +52,7 @@ function disableAnalytics() {
   window.gtag("consent", "update", { analytics_storage: "denied" });
 }
 
-export function AnalyticsConsent() {
+export function AnalyticsConsent({ assetBase = "/" }: { assetBase?: string }) {
   const [choice, setChoice] = useState<ConsentChoice | null>(null);
   const [ready, setReady] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -97,7 +97,7 @@ export function AnalyticsConsent() {
               <p className="mt-2 text-sm leading-6 text-white/75">
                 Utilizamos cookies analíticas para conocer el uso de la web y mejorar la experiencia. Puedes aceptar,
                 rechazarlas o configurar tu elección. Consulta nuestra{" "}
-                <a className="underline underline-offset-4 hover:text-white" href="https://www.tikitaka.es/politica-de-privacidad/">
+                <a className="underline underline-offset-4 hover:text-white" href={`${assetBase}cookies/`}>
                   política de cookies
                 </a>.
               </p>

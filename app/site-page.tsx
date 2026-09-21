@@ -227,7 +227,7 @@ export function SitePage({ content, assetBase = "/" }: { content: SiteContent; a
           <div><h3>Áreas</h3><a href="#areas">Salones de juego</a><a href="https://tikitakamaquinasrecreativas.com/" target="_blank" rel="noreferrer">Terminales de hostelería</a><a href="#areas">Apuestas deportivas</a><a href="#areas">Cafetiko</a><a href={playUrl}><BrandName name={content.identity.brandName} play /></a></div>
           <div><h3>Contacto</h3><a href={`mailto:${content.footer.email}`}>{content.footer.email}</a><a href={`tel:${content.footer.phone.replace(/\s/g, "")}`}>{content.footer.phone}</a><p>{content.footer.address.split("\n").map((line) => <span key={line}>{line}<br /></span>)}</p></div>
         </div>
-        <div className="footer-bottom"><span>© 2026 <BrandName name={content.identity.brandName} /> Games</span><div><a href={content.footer.legalUrl} target="_blank" rel="noreferrer">Aviso legal</a><a href={content.footer.privacyUrl} target="_blank" rel="noreferrer">Privacidad</a><a href={content.footer.cookiesUrl} target="_blank" rel="noreferrer">Cookies</a><a href={content.footer.ethicsUrl} target="_blank" rel="noreferrer">Canal ético</a></div><strong>JUEGA CON RESPONSABILIDAD · +18</strong></div>
+        <div className="footer-bottom"><span>© 2026 <BrandName name={content.identity.brandName} /> Games</span><div><a href={`${assetBase}aviso-legal/`}>Aviso legal</a><a href={`${assetBase}privacidad/`}>Privacidad</a><a href={`${assetBase}cookies/`}>Cookies</a><a href={content.footer.ethicsUrl} target="_blank" rel="noreferrer">Canal ético</a></div><strong>JUEGA CON RESPONSABILIDAD · +18</strong></div>
       </footer>
       </main>
     </>

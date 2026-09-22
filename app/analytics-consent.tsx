@@ -11,14 +11,19 @@ declare global {
   interface Window {
     dataLayer: unknown[];
     gtag: (...args: unknown[]) => void;
+    tikitakaConsentInitialised?: boolean;
   }
 }
 
 function initialiseConsentMode() {
   window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || function gtag(...args: unknown[]) {
-    window.dataLayer.push(args);
+  window.gtag = window.gtag || function gtag(..._args: unknown[]) {
+    // Google procesa el objeto `arguments`; una matriz normal no ejecuta
+    // correctamente los comandos consent/config en la etiqueta cargada.
+    window.dataLayer.push(arguments);
   };
+  if (window.tikitakaConsentInitialised) return;
+  window.tikitakaConsentInitialised = true;
   window.gtag("consent", "default", {
     ad_storage: "denied",
     ad_user_data: "denied",

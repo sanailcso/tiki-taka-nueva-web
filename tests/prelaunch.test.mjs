@@ -36,6 +36,9 @@ test("las páginas legales se generan con canonical propio y los enlaces son int
   const [page, consent, legal] = await Promise.all([text("app/site-page.tsx"), text("app/analytics-consent.tsx"), text("app/legal-page.tsx")]);
   assert.match(page, /assetBase\}aviso-legal/);
   assert.match(consent, /assetBase\}cookies/);
+  assert.match(consent, /dataLayer\.push\(arguments\)/);
+  assert.doesNotMatch(consent, /dataLayer\.push\(args\)/);
+  assert.match(consent, /tikitakaConsentInitialised/);
   assert.match(await text("app/cms/default-content.ts"), /SYMLOGIC, S\.L\. \(LEGITEC\)/);
   assert.match(legal, /content\.legal|legal\.dpoName/);
   assert.doesNotMatch(legal, /FENIX CONSULTING|Ley Orgánica 15\/1999|Amador Recreativos/);
@@ -48,6 +51,14 @@ test("el paquete inicial público no contiene el CMS ni credenciales administrat
   const entry = await readFile(new URL(entryName, assetsDir), "utf8");
 
   assert.doesNotMatch(entry, /signInWithPassword|Backoffice profesional|admin@cms/i);
+});
+
+test("el administrador incluye acceso a Analytics y Tag Assistant", async () => {
+  const admin = await text("app/admin/admin-shell.tsx");
+  assert.match(admin, /id: "analytics", label: "Analytics"/);
+  assert.match(admin, /G-X6XCFS15PC/);
+  assert.match(admin, /analytics\.google\.com\/analytics\/web/);
+  assert.match(admin, /tagassistant\.google\.com/);
 });
 
 test("la portada usa imágenes optimizadas y los datos corregidos", async () => {

@@ -50,7 +50,7 @@ export type SiteContent = {
     description: string;
     cards: Array<{ eyebrow: string; title: string; description: string; label?: string; href?: string; logoUrl?: string }>;
   };
-  finder: { kicker: string; title: string; description: string; count: string; countLabel: string; directoryLabel: string; directoryUrl: string };
+  finder: { kicker: string; title: string; description: string; count: string; countLabel: string };
   history: { kicker: string; title: string; description: string; entries: Array<{ date: string; title: string; description: string; active?: boolean }> };
   commitment: { kicker: string; title: string; description: string; label: string; url: string };
   jobs: { kicker: string; title: string; description: string; button: string; url: string };

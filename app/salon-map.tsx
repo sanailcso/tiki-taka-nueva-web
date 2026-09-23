@@ -291,10 +291,9 @@ export function SalonMap({ salons = DEFAULT_SALONS }: { salons?: Salon[] }) {
             </div>
           </div>
           <div className="locator-list">
-            {filtered.map((salon, index) => (
+            {filtered.map((salon) => (
               <button type="button" key={`${salon.region}-${salon.name}`} className={`locator-item ${active?.name === salon.name ? "active" : ""}`}
                 onMouseEnter={() => setActive(salon)} onFocus={() => setActive(salon)} onClick={() => selectSalon(salon, true)}>
-                <span className="locator-item-number">{String(index + 1).padStart(2, "0")}</span>
                 <span><strong>{getSalonDisplayName(salon.name)}</strong><small>{salon.region}</small></span><i aria-hidden="true">→</i>
               </button>
             ))}

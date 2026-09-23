@@ -49,7 +49,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       { eyebrow: "Línea de restauración", title: "Cafetiko", description: "Cafeterías con ambiente de toda la vida, atención cercana y una identidad actual inspirada en el estilo Tiki Taka.", logoUrl: "/cafetiko-logo.webp" },
     ],
   },
-  finder: { kicker: "Nuestros salones", title: "Tu Tiki Taka, más cerca de ti.", description: "Explora nuestra red de salones de una forma diferente. Pasa por cada punto para descubrir la ubicación y abrir las indicaciones para llegar.", count: "+70", countLabel: "ubicaciones conectadas en cuatro territorios", directoryLabel: "Ver directorio oficial", directoryUrl: "https://www.tikitaka.es/salones-de-juego/" },
+  finder: { kicker: "Nuestros salones", title: "Tu Tiki Taka, más cerca de ti.", description: "Explora nuestra red de salones de una forma diferente. Pasa por cada punto para descubrir la ubicación y abrir las indicaciones para llegar.", count: "+70", countLabel: "ubicaciones conectadas en cuatro territorios" },
   history: {
     kicker: "Nuestra historia", title: "El futuro se construye con experiencia.", description: "Más de cinco décadas evolucionando sin perder el espíritu familiar con el que comenzó todo.",
     entries: [
